@@ -42,11 +42,11 @@ Board createBoard(){
         std::cout << "write 'pvp' for player vs player or 'pve' for player vs AI" << std::endl;
         std::cin >> pvx;
     }
-    while ((5 > width) || (width > 50)){
+    while ((25 > width) || (width > 50)){
         std::cout << "choose the width of the field (between 24 and 50)" << std::endl;
         std::cin >> width;
     }
-    while ((5 > height) || (height > 50)){
+    while ((25 > height) || (height > 50)){
         std::cout << "choose the height of the field (between 24 and 50)" << std::endl;
         std::cin >> height;
     }
