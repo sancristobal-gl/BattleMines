@@ -154,6 +154,7 @@ void disableTilesUsed(Board &board){
 
 //when only one player has mines remaining, they win the game
 //if no players have mines, game is a draw
+//TODO: refactor to support more than 2 players
 int checkWinCon(Board board){
     int winner = -1;
     if(board.players[0].mineCount <= 0){

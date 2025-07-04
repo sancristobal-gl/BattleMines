@@ -16,5 +16,3 @@ void chooseMinePositions(Board &board, Player &player);
 void guess(Board &board, Player player);
 
 bool chechMineCollision(Board &board);
-
-int game(Board &board);

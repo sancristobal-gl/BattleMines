@@ -6,6 +6,7 @@
 #include <unordered_map>
 #include <utility>
 #include "game_logic.h"
+#include "stages.h"
 
 int main(){
     srand(time(0)); // initialize random number generator
