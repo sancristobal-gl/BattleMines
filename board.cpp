@@ -1,9 +1,9 @@
 #include "board.h"
 
-bool isPositionValid(Board board, Position pos){
+bool isPositionValid(Board board, Position pos){ //check if pos if withing acceptable values 
     if(pos.xpos < 0 || pos.ypos < 0) return false;
     if(pos.xpos > board.width || pos.ypos > board.height) return false;
-    for(std::vector<Position>::iterator it = board.disabledPositions.begin(); it != board.disabledPositions.end(); it++){
+    for(std::vector<Position>::iterator it = board.disabledPositions.begin(); it != board.disabledPositions.end(); it++){ //check if pos is not equal to an invalid position
         if(*it == pos){
             return false;
         }
@@ -11,7 +11,9 @@ bool isPositionValid(Board board, Position pos){
     return true;
 }
 
-std::vector<Position> getValidTiles(Board board){
+//gets all possible valid positions
+//mainly for bot logic
+std::vector<Position> getValidTiles(Board board){ 
     std::vector<Position> validPositions;
     for(int x = 0; x < board.width; x++){
         for(int y = 0; y < board.height; y++){
@@ -30,6 +32,7 @@ std::vector<Position> getValidTiles(Board board){
     return validPositions;
 }
 
+//board construction
 Board createBoard(){
     Board board;
     bool created = false;
@@ -57,12 +60,12 @@ Board createBoard(){
     board.width = width;
     board.height = height;
     board.playerCount = 2;
-    board.players = new Player[board.playerCount];
+    board.players = new Player[board.playerCount]; //dynamic array since we don't know the number of players beforehand
     for(int p = 0; p < board.playerCount; p++){
         Player player;
         player.mineCount = mineCount;
         player.id = p;
-        if(p==1 && pvx == "pve"){ //set player 2 to be controlled by AI
+        if(p==1 && pvx == "pve"){ //set player 2 to be controlled by AI, may need to be refactored when support for more than 2 players is implemented
             player.isAI = true;
         }
         board.players[p] = player;
@@ -72,6 +75,8 @@ Board createBoard(){
     return board;
 }
 
+//print board to console
+//may be depreciated if an UI is implemented in the future
 void printField(Board board, int perspective){ //no se yo tampoco entiendo nada
     bool isPositionEnabled;
     for (int y = 0; y <= board.height; y++){ //para cada fila
@@ -99,7 +104,7 @@ void printField(Board board, int perspective){ //no se yo tampoco entiendo nada
                     }
                 }
                 bool mineInPos=false;
-                if (perspective != -1){
+                if (perspective != -1){ //shows the mines belonging to player
                     for(std::vector<Mine>::iterator it = board.placedMines.begin(); it != board.placedMines.end(); it++){
                         if(it->xpos == x && it->ypos == y){
                             if(it->owner == perspective){
@@ -127,17 +132,6 @@ void disablePosition(Board &board, Position disabledPosition){
     board.disabledPositions.push_back(disabledPosition);
 }
 
-bool isValidPlacement(Board board, Position pos){
-    if(pos.xpos < 1 || pos.ypos < 1) return false;
-    if(pos.xpos > board.width || pos.ypos > board.height) return false;
-    for(std::vector<Position>::iterator it = board.disabledPositions.begin(); it != board.disabledPositions.end(); it++){
-        if(*it == pos){
-            return false;
-        }
-    }
-    return true;
-}
-
 bool removeMine(Board board, Mine mine){
     for(std::vector<Mine>::iterator it = board.placedMines.begin(); it != board.placedMines.end(); it++){
         if (*it == mine){
@@ -151,12 +145,15 @@ bool removeMine(Board board, Mine mine){
     return false; //just in case I need to check if a mine was properly erased or not
 }
 
+//function to be called at the end of each turn
 void disableTilesUsed(Board &board){ 
     for(std::vector<Mine>::iterator it = board.placedMines.begin(); it != board.placedMines.end(); it++){
         disablePosition(board, *it);
     }
 }
 
+//when only one player has mines remaining, they win the game
+//if no players have mines, game is a draw
 int checkWinCon(Board board){
     int winner = -1;
     if(board.players[0].mineCount <= 0){

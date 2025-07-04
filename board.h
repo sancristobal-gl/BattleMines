@@ -64,8 +64,6 @@ void printField(Board board, int perspective = -1);
 
 void disablePosition(Board &board, Position disabledPosition);
 
-bool isValidPlacement(Board board, Position mine);
-
 bool removeMine(Board board, Mine mine);
 
 void disableTilesUsed(Board &board);

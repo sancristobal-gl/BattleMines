@@ -1,6 +1,7 @@
-
 #include "game_logic.h"
 
+//gets input from console if player is human
+//generates random input if player is bot
 std::string getPlayerInput(Board board, Player player, int askCoordinate = 0){
     std::string ret = "";
     if(player.isAI == false){
@@ -45,7 +46,7 @@ void chooseMinePositions(Board &board, Player &player){
             }
             
         }
-        std::cout << "Player " << mine.owner+1 <<  " placed mine at " << mine.xpos << ", " << mine.ypos << std::endl;
+        std::cout << "Player " << mine.owner+1 <<  " placed mine at " << mine.xpos << ", " << mine.ypos << std::endl; //for testing purposes, TODO: remove before main release
         board.placedMines.push_back(mine);
         std::cout << std::endl;
         system("cls");
@@ -88,6 +89,8 @@ void guess(Board &board, Player player){
     } 
 }
 
+//function to be called after each player has placed their mines
+//colliding mines are annihilated and removed from their owner's mine pool
 bool chechMineCollision(Board &board){
     bool wasThereCollision = true;
     std::vector<Mine> conflictingMines;
