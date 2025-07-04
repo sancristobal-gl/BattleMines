@@ -123,14 +123,12 @@ void printField(Board board, int perspective){ //no se yo tampoco entiendo nada
     }
 }
 
-void printField(Board board, int perspective);
-
 void disablePosition(Board &board, Position disabledPosition){
     board.disabledPositions.push_back(disabledPosition);
 }
 
 bool isValidPlacement(Board board, Position pos){
-    if(pos.xpos < 0 || pos.ypos < 0) return false;
+    if(pos.xpos < 1 || pos.ypos < 1) return false;
     if(pos.xpos > board.width || pos.ypos > board.height) return false;
     for(std::vector<Position>::iterator it = board.disabledPositions.begin(); it != board.disabledPositions.end(); it++){
         if(*it == pos){

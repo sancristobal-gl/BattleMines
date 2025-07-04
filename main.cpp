@@ -7,9 +7,6 @@
 #include <utility>
 #include "game_logic.h"
 
-
-
-
 int main(){
     srand(time(0)); // initialize random number generator
     Board board = createBoard();
