@@ -5,12 +5,11 @@
 #include <vector>
 #include <unordered_map>
 #include <utility>
-#include "game_logic.h"
 #include "stages.h"
 
 int main(){
     srand(time(0)); // initialize random number generator
     Board board = createBoard();
-    int winner = game(board);
+    int winner = gameLoop(board);
     std::cout << "The winner is: player " << winner << "! Congratulations!" << std::endl;
 }
