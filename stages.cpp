@@ -1,6 +1,6 @@
 #include "stages.h"
 
-int roundStartStage(Board board){
+void roundStartStage(Board board){
     for(int p = 0; p < board.playerCount; p++){
         std::cout << "Player " << board.players[p].id << " mine count: " << board.players[p].mineCount << std::endl;
     }

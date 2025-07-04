@@ -1,6 +1,6 @@
 #include "game_logic.h"
 
-int roundStartStage(Board board);
+void roundStartStage(Board board);
 
 int minePlacementStage(Board board, int winner);
 
