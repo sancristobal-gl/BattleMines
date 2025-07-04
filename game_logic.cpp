@@ -11,10 +11,10 @@ std::string getPlayerInput(Board board, Player player, int askCoordinate = 0){
         std::vector<Position> validTiles = getValidTiles(board);
         int randomPos = rand() % validTiles.size();
         if(askCoordinate == 0){
-            return std::to_string(validTiles[randomPos].xpos);
+            ret = std::to_string(validTiles[randomPos].xpos);
         }
         else{
-            return std::to_string(validTiles[randomPos].ypos);
+            ret = std::to_string(validTiles[randomPos].ypos);
         }
         system("cls");
     }
@@ -45,6 +45,7 @@ void chooseMinePositions(Board &board, Player &player){
             }
             
         }
+        std::cout << "Player " << mine.owner+1 <<  " placed mine at " << mine.xpos << ", " << mine.ypos << std::endl;
         board.placedMines.push_back(mine);
         std::cout << std::endl;
         system("cls");
