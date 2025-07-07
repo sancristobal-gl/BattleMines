@@ -26,9 +26,16 @@ int gameLoop(Board &board){
     return 0;
 }
 
+//TODO: Fix available spaces < mine count soft-block edge case
 int main(){
     srand(time(0)); // initialize random number generator
     Board board = createBoard();
     int winner = gameLoop(board);
-    std::cout << "The winner is: player " << winner << "! Congratulations!" << std::endl;
+    if (winner != 0){
+        std::cout << "The winner is: player " << winner << "! Congratulations!" << std::endl;
+    }
+    else{
+        std::cout << "The game is a draw!" << std::endl;
+    }
+    
 }

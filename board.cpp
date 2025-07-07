@@ -65,9 +65,7 @@ Board createBoard(){
             player.isAI = true;
         }
         board.players[p] = player;
-        
-        std::cout << "created player " << p << std::endl;
-    }
+        }
     return board;
 }
 
@@ -159,7 +157,7 @@ int checkWinCon(Board board){
         }
         else winner=2;
     }
-    if(board.players[1].mineCount <= 0){
+    else if(board.players[1].mineCount <= 0){
         winner=1;
     }
     return winner;

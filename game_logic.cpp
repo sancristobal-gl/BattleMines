@@ -46,7 +46,7 @@ void chooseMinePositions(Board &board, Player &player){
             }
             
         }
-        std::cout << "Player " << mine.owner+1 <<  " placed mine at " << mine.xpos << ", " << mine.ypos << std::endl; //for testing purposes, TODO: remove before main release
+        //std::cout << "Player " << mine.owner+1 <<  " placed mine at " << mine.xpos << ", " << mine.ypos << std::endl; //for testing purposes, TODO: remove before main release
         board.placedMines.push_back(mine);
         std::cout << std::endl;
         system("cls");
@@ -107,6 +107,7 @@ bool chechMineCollision(Board &board){
             }
         }
         if(conflictingMines.size() > 1){
+            i--;
             std::cout << "Colisionaron minas en " << conflictingMines[0].xpos << ", " << conflictingMines[0].ypos << std::endl; //conflictingMines siempre tendra un valor en [0]
             for(Mine mine : conflictingMines){
                 removeMine(board, mine);
