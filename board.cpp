@@ -15,16 +15,12 @@ bool isPositionValid(Board board, Position pos){ //check if pos if withing accep
 //mainly for bot logic
 std::vector<Position> getValidTiles(Board board){ 
     std::vector<Position> validPositions;
-    for(int x = 0; x < board.width; x++){
-        for(int y = 0; y < board.height; y++){
+    for(int x = 1; x <= board.width; x++){
+        for(int y = 1; y <= board.height; y++){
             Position pos;
             pos.xpos = x;
             pos.ypos = y;
-            bool isValid = true;
-            for(std::vector<Position>::iterator it = board.disabledPositions.begin(); it != board.disabledPositions.end(); it++){
-                if(isPositionValid(board, *it)) isValid = false;
-            }
-            if (isValid){
+            if (isPositionValid(board, pos)){
                 validPositions.push_back(pos);
             }
         }
@@ -45,12 +41,12 @@ Board createBoard(){
         std::cout << "write 'pvp' for player vs player or 'pve' for player vs AI" << std::endl;
         std::cin >> pvx;
     }
-    while ((25 > width) || (width > 50)){
-        std::cout << "choose the width of the field (between 24 and 50)" << std::endl;
+    while ((5 > width) || (width > 10)){
+        std::cout << "choose the width of the field (between 5 and 10)" << std::endl;
         std::cin >> width;
     }
-    while ((25 > height) || (height > 50)){
-        std::cout << "choose the height of the field (between 24 and 50)" << std::endl;
+    while ((5 > height) || (height > 10)){
+        std::cout << "choose the height of the field (between 5 and 10)" << std::endl;
         std::cin >> height;
     }
     while ((3 > mineCount) || (mineCount > 8)){
@@ -132,7 +128,7 @@ void disablePosition(Board &board, Position disabledPosition){
     board.disabledPositions.push_back(disabledPosition);
 }
 
-bool removeMine(Board board, Mine mine){
+bool removeMine(Board &board, Mine mine){
     for(std::vector<Mine>::iterator it = board.placedMines.begin(); it != board.placedMines.end(); it++){
         if (*it == mine){
             board.placedMines.erase(it);

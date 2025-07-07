@@ -11,5 +11,5 @@ int main(){
     srand(time(0)); // initialize random number generator
     Board board = createBoard();
     int winner = gameLoop(board);
-    std::cout << "The winner is: player " << winner << "! Congratulations!" << std::endl;
+    std::cout << "The winner is: player " << winner+1 << "! Congratulations!" << std::endl;
 }

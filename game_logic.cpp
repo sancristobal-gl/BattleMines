@@ -17,7 +17,7 @@ std::string getPlayerInput(Board board, Player player, int askCoordinate = 0){
         else{
             ret = std::to_string(validTiles[randomPos].ypos);
         }
-        system("cls");
+        std::cout << std::endl;
     }
     return ret;
 }
@@ -28,7 +28,7 @@ void chooseMinePositions(Board &board, Player &player){
         bool validPlacement = false;
         Mine mine;
         while(validPlacement == false){
-            std::cout << "Player " << player.id << "!, choose your mine's positions" << std::endl;
+            std::cout << "Player " << player.id + 1 << "!, choose your mine's positions" << std::endl;
             std::cout << "Choose the x position of mine " << m+1 << ": ";
             mine.xpos = std::stoi(getPlayerInput(board, player, 0));;
             std::cout << "Choose the y position of mine " << m+1 << ": ";
@@ -59,7 +59,7 @@ void guess(Board &board, Player player){
     Position guess;
     int isGuessValid = false; //flag to check if the inputed position is valid. If not, ask the player again
     while(isGuessValid == false){
-        std::cout << "Player " << player.id <<  ", take a guess... " << std::endl;
+        std::cout << "Player " << player.id+1 <<  ", take a guess... " << std::endl;
         std::cout << "X position: ";
         guess.xpos = std::stoi(getPlayerInput(board, player, 0));;
         std::cout << std::endl;
@@ -80,9 +80,12 @@ void guess(Board &board, Player player){
             }
             else{
                 removeMine(board, *it);
-                std::cout << "You found an enemy mine!" <<  std::endl;
                 disablePosition(board, guess);
-                system("pause");
+                std::cout << board.placedMines.size() << std::endl;
+                if(player.isAI == false){
+                    std::cout << "You found an enemy mine!" <<  std::endl;
+                }
+
             }
         }
         else disablePosition(board, guess);
