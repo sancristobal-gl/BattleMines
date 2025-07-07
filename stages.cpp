@@ -40,20 +40,3 @@ void roundEndStage(Board &board){
     disableTilesUsed(board);
     board.placedMines.clear();
 }
-
-int gameLoop(Board &board){
-    /*
-    winner = 0, empate
-    winner = 1, gano jugador 1
-    winner = 2, gano jugador 2
-    */
-    int winner = -1; 
-    while (winner == -1){
-        roundStartStage(board);
-        winner = minePlacementStage(board);
-        winner = guessingStage(board);
-        roundEndStage(board);
-    }
-    return winner;
-    return 0;
-}

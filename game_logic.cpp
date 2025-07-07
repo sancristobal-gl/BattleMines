@@ -84,7 +84,6 @@ void guess(Board &board, Player player){
                 disablePosition(board, guess);
                 if(player.isAI == false){
                     std::cout << "You found an enemy mine!" <<  std::endl;
-                    
                     system("pause");
                 return;
                 }
