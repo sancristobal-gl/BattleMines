@@ -82,11 +82,9 @@ void guess(Board &board, Player player){
             else{
                 removeMine(board, *it);
                 disablePosition(board, guess);
-                if(player.isAI == false){
-                    std::cout << "You found an enemy mine!" <<  std::endl;
-                    system("pause");
+                std::cout << "You found an enemy mine!" <<  std::endl;
+                system("pause");
                 return;
-                }
             }
         }
         else disablePosition(board, guess);
