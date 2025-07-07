@@ -6,7 +6,7 @@ void roundStartStage(Board board){
     }
     printField(board);
     std::cout << "Press enter to commence the round!" << std::endl;
-    std::getchar();
+    system("pause");
     system("cls");
 }
 
@@ -21,7 +21,7 @@ int minePlacementStage(Board &board){
     }
     bool wasThereCollision = chechMineCollision(board);
     if (wasThereCollision == true){
-        std::getchar();
+        system("pause");
         system("cls");
     }
     return checkWinCon(board);

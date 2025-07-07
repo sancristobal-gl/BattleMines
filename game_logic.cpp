@@ -73,6 +73,7 @@ void guess(Board &board, Player player){
         //system("cls");
     }
     //check if the guessed position shares the same position as a mine
+    std::vector<Mine> minesToRemove;
     for(std::vector<Mine>::iterator it = board.placedMines.begin(); it != board.placedMines.end(); it++){
         if (*it == guess){
             if(it->owner == player.id){
@@ -81,15 +82,17 @@ void guess(Board &board, Player player){
             else{
                 removeMine(board, *it);
                 disablePosition(board, guess);
-                std::cout << board.placedMines.size() << std::endl;
                 if(player.isAI == false){
                     std::cout << "You found an enemy mine!" <<  std::endl;
+                    
+                    system("pause");
+                return;
                 }
-
             }
         }
         else disablePosition(board, guess);
-    } 
+    }
+    return;
 }
 
 //function to be called after each player has placed their mines
