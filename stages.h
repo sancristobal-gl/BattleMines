@@ -1,9 +1,14 @@
 #include "game_logic.h"
 
-void roundStartStage(Board board);
+namespace gameStages{
+    void roundStart(Board const& board);
 
-int minePlacementStage(Board &board);
+    int minePlacement(Board &board);
 
-int guessingStage(Board &board);
+    int guessing(Board &board);
 
-void roundEndStage(Board &board);
+    void roundEnd(Board &board);
+}
+
+
+

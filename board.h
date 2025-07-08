@@ -4,63 +4,53 @@
 #include <cstdlib> 
 
 struct Position{
-    int xpos;
-    int ypos;
+    unsigned int xpos = 0;
+    unsigned int ypos = 0;
 
-    bool operator==(const Position b) const{
-        return ((xpos == b.xpos)
-            && (ypos == b.ypos));
-    }
-    Position(){
-
-    }
-    Position(int x, int y){
-        this->xpos = x;
-        this->ypos = y;
-    }
+    bool operator==(const Position &b) const;
 };
 
-struct Mine : Position{
-    int owner;
+struct Mine:Position{
+    int owner = -1;
 
-    bool operator==(const Mine b) const{
-        return ((xpos == b.xpos)
-            && (ypos == b.ypos))
-            && (owner == b.owner);
-    }
+    bool operator==(const Mine &b) const;
 
-    bool operator==(const Position b) const{
-        return ((xpos == b.xpos)
-            && (ypos == b.ypos));
-    }
+    bool operator==(const Position &b) const;
 };
 
 struct Player{
-    int id;
-    Mine* mines;
-    int mineCount;
+    int id = -1;
+    Mine* mines = nullptr;
+    int mineCount = 0;
     bool operator==(const Player b){
         return ((id == b.id));
     }
-    bool isAI;
+    bool isAI = false;
+};
+
+enum gameType{
+    PVP,
+    PVE
 };
 
 struct Board{
-    int width;
-    int height;
+    int width = 0;
+    int height = 0;
     std::vector<Position> disabledPositions;
-    Player* players;
-    int playerCount;
+    Player* players = nullptr;
+    int playerCount = 0;
     std::vector<Mine> placedMines;
-    bool pve;
-};
-bool isPositionValid(Board board, Position pos);
+    gameType gameType = PVP;
 
-std::vector<Position> getValidTiles(Board board);
+    ~Board();
+};
+bool isPositionValid(Board const& board, Position pos);
+
+std::vector<Position> getValidTiles(Board const& board);
 
 Board createBoard();
 
-void printField(Board board, int perspective = -1);
+void printBoard(Board const& board, int perspective = -1);
 
 void disablePosition(Board &board, Position disabledPosition);
 
@@ -68,4 +58,4 @@ bool removeMine(Board &board, Mine mine);
 
 void disableTilesUsed(Board &board);
 
-int checkWinCon(Board board);
+int getWinningPlayer(Board const& board);

@@ -1,19 +1,43 @@
 #include "board.h"
+const int undefinedPerspective = -1;
 
-bool isPositionValid(Board board, Position pos){ //check if pos if withing acceptable values 
-    if(pos.xpos < 0 || pos.ypos < 0) return false;
-    if(pos.xpos > board.width || pos.ypos > board.height) return false;
-    for(std::vector<Position>::iterator it = board.disabledPositions.begin(); it != board.disabledPositions.end(); it++){ //check if pos is not equal to an invalid position
-        if(*it == pos){
-            return false;
-        }
+bool Position::operator==(const Position &b) const{
+    return ((xpos == b.xpos)
+        && (ypos == b.ypos));
+}
+
+bool Mine::operator==(const Mine &b) const{
+    return ((xpos == b.xpos)
+        && (ypos == b.ypos))
+        && (owner == b.owner);
+}
+
+bool Mine::operator==(const Position &b) const{
+    return ((xpos == b.xpos)
+        && (ypos == b.ypos));
+}
+
+Board::~Board(){
+    delete(players);
+}
+
+bool isPositionValid(Board const& board, Position pos){ //check if pos if withing acceptable values 
+    //If the position is outside the board, return false;
+    if((pos.xpos < 1)
+    || (pos.ypos < 1)
+    || (pos.xpos > board.width)
+    || (pos.ypos > board.height)) return false;
+    //if the position is disabled, return false
+    for(int i = 0; i < board.disabledPositions.size(); i++){
+        if(pos == board.disabledPositions[i]) return false;
     }
+    //else, return true
     return true;
 }
 
 //gets all possible valid positions
 //mainly for bot logic
-std::vector<Position> getValidTiles(Board board){ 
+std::vector<Position> getValidTiles(Board const& board){ 
     std::vector<Position> validPositions;
     for(int x = 1; x <= board.width; x++){
         for(int y = 1; y <= board.height; y++){
@@ -28,6 +52,16 @@ std::vector<Position> getValidTiles(Board board){
     return validPositions;
 }
 
+int getValuesWithinRange(std::string prompt, int min, int max){ //function to input an int value within range, used for board initialization, probably could be reporopused for other uses
+    int ret = min-1;
+    while ((ret < min) || (ret > max)){
+        std::cout << prompt << std::endl;
+        std::cout << "value must be between " << min << " and " << max << std::endl;
+        std::cin >> ret;
+    }
+    return ret;
+    
+}
 //board construction
 Board createBoard(){
     Board board;
@@ -35,33 +69,17 @@ Board createBoard(){
     int width = NULL;
     int height = NULL;
     int mineCount = 0;
-    std::string pvx = "";
-    while (!(pvx == "pve") && !(pvx == "pvp")){
-        std::cout << "will this be a player vs player game or a player vs AI game?" << std::endl;
-        std::cout << "write 'pvp' for player vs player or 'pve' for player vs AI" << std::endl;
-        std::cin >> pvx;
-    }
-    while ((5 > width) || (width > 10)){
-        std::cout << "choose the width of the field (between 5 and 10)" << std::endl;
-        std::cin >> width;
-    }
-    while ((5 > height) || (height > 10)){
-        std::cout << "choose the height of the field (between 5 and 10)" << std::endl;
-        std::cin >> height;
-    }
-    while ((3 > mineCount) || (mineCount > 8)){
-        std::cout << "choose the number of mines on the field (between 3 and 8)" << std::endl;
-        std::cin >> mineCount;
-    }
-    board.width = width;
-    board.height = height;
-    board.playerCount = 2;
+    board.gameType = static_cast<gameType>(getValuesWithinRange("choose game mode (0=PVP, 1=PVE)", 0, 1)); //not sure if this is good practice
+    board.width = getValuesWithinRange("choose the width of the field", 5, 10);
+    board.height = getValuesWithinRange("choose the height of the field", 5, 10);
+    mineCount = getValuesWithinRange("choose the number of mines on the field", 3, 8);
+    board.playerCount = 2; //TODO: make value be chosen by the player once support for more than two players is added
     board.players = new Player[board.playerCount]; //dynamic array since we don't know the number of players beforehand
     for(int p = 0; p < board.playerCount; p++){
         Player player;
         player.mineCount = mineCount;
         player.id = p;
-        if(p==1 && pvx == "pve"){ //set player 2 to be controlled by AI, may need to be refactored when support for more than 2 players is implemented
+        if(p==1 && board.gameType == PVE){ //set player 2 to be controlled by AI, may need to be refactored when support for more than 2 players is implemented
             player.isAI = true;
         }
         board.players[p] = player;
@@ -69,54 +87,77 @@ Board createBoard(){
     return board;
 }
 
-//print board to console
-//may be depreciated if an UI is implemented in the future
-void printField(Board board, int perspective){ //no se yo tampoco entiendo nada
-    bool isPositionEnabled;
-    for (int y = 0; y <= board.height; y++){ //para cada fila
-        if (y == 0){ //si es la primera fila, imprimimos solo espacio
+namespace printBoardAuxiliars{
+    void showPositionStatus(Board const& board, unsigned int x, unsigned int y, int perspective = undefinedPerspective);
+
+    void printRow(Board const& board, unsigned int y);
+
+    void printColumnInRow(Board const& board, unsigned int x, unsigned int y, int perspective);
+}
+
+void printBoardAuxiliars::showPositionStatus(Board const& board, unsigned int x, unsigned int y, int perspective){
+    //print the status of the position {x, y}
+    //(" " = no existe, "O" = posicion en juego/estado desconocido, "M" = mina del jugador en la posicion)
+    bool isPositionEnabled = true;
+    
+    for(int i = 0; i < board.disabledPositions.size(); i++){
+        Position disabledPos = board.disabledPositions[i];
+        Position pos = {x, y};
+        if(disabledPos == pos){
+            isPositionEnabled = false;
+            break;
+        }
+    }
+    bool mineInPos=false;
+    if (perspective != undefinedPerspective){ //show ony the mines belonging to player
+        for(std::vector<Mine>::const_iterator it = board.placedMines.begin(); it != board.placedMines.end(); it++){
+            if(it->xpos == x && it->ypos == y){
+                if(it->owner == perspective){
+                    mineInPos=true;
+                    break;
+                }
+            }
+        }
+    }
+    if(mineInPos == true) std::cout << "  M";
+    else if(isPositionEnabled==false) std::cout << "   ";
+    else if(isPositionEnabled == true) std::cout << "  O";
+}
+
+void printBoardAuxiliars::printRow(Board const& board, unsigned int y){
+    int spaceLength = (3 - std::to_string(y).length());
+    if (y == 0){ //si es la primera fila, imprimimos solo espacio
             std::cout << "   ";
         }
-        else{ //caso contrario, imprimimos el numero de la fila
-            std::cout << y;
-            for(int space = 0; space < (3 - std::to_string(y).length()); space++){
-                std::cout << " ";
-            };
-        }
+    else{ //caso contrario, imprimimos el numero de la fila
+        std::cout << y;
+        for(int space = 0; space < spaceLength; space++){
+            std::cout << ' ';
+        };
+    }
+}
+
+void printBoardAuxiliars::printColumnInRow(Board const& board, unsigned int x, unsigned int y, int perspective){
+    int spaceLength = (3 - std::to_string(x).length());
+    if (y == 0){ //si es la primera fila, imprimimos los numeros de las columnas
+        for(int space = 0; space < spaceLength; space++){
+            std::cout << ' ';
+        };
+        std::cout << std::to_string(x);
+    }
+    else{ //en caso contrario, imprimimos el estado de la posicion 
+        printBoardAuxiliars::showPositionStatus(board, x, y, perspective);
+    }
+    return;
+}
+
+//print board to console
+//may be depreciated if an UI is implemented in the future
+void printBoard(Board const& board, int perspective){
+    for (int y = 0; y <= board.height; y++){ //para cada fila
+        printBoardAuxiliars::printRow(board, y);
         for (int x = 1; x <= board.width; x++){ // seguido del numero de fila, imprimimos todas las posiciones de la fila
-            if (y == 0){ //si es la primera fila, imprimimos los numeros de las columnas
-                for(int space = 0; space < (3 - std::to_string(x).length()); space++){
-                    std::cout << " ";
-                };
-                std::cout << std::to_string(x);
-            }
-            else{ //en caso contrario, imprimimos el estado de la posicion (" " = no existe, "O" = posicion en juego/estado desconocido, "M" = mina del jugador en la posicion)
-                isPositionEnabled = true;
-                for(std::vector<Position>::iterator it = board.disabledPositions.begin(); it != board.disabledPositions.end(); it++){
-                    if(it->xpos == x && it->ypos == y){
-                        isPositionEnabled = false;
-                    }
-                }
-                bool mineInPos=false;
-                if (perspective != -1){ //shows the mines belonging to player
-                    for(std::vector<Mine>::iterator it = board.placedMines.begin(); it != board.placedMines.end(); it++){
-                        if(it->xpos == x && it->ypos == y){
-                            if(it->owner == perspective){
-                                std::cout << "  M";
-                                mineInPos=true;
-                            }
-                        }
-                    }
-                }
-                if(mineInPos == false){
-                    if(isPositionEnabled==false){
-                        std::cout << "   ";
-                    }
-                    else if(isPositionEnabled == true){
-                        std::cout << "  O";
-                    }
-                }
-            }
+            printBoardAuxiliars::printColumnInRow(board, x, y, perspective);
         }
         std::cout << std::endl;
     }
@@ -149,7 +190,7 @@ void disableTilesUsed(Board &board){
 //when only one player has mines remaining, they win the game
 //if no players have mines, game is a draw
 //TODO: refactor to support more than 2 players
-int checkWinCon(Board board){
+int getWinningPlayer(Board const& board){
     int winner = -1;
     if(board.players[0].mineCount <= 0){
         if(board.players[1].mineCount <= 0){

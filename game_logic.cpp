@@ -2,14 +2,14 @@
 
 //gets input from console if player is human
 //generates random input if player is bot
-std::string getPlayerInput(Board board, Player player, int askCoordinate = 0){
+std::string getPlayerInput(Board &board, Player player, int askCoordinate = 0){
     std::string ret = "";
     if(player.isAI == false){
         std::cin >> ret;
         return ret;
     }
     else{
-        std::vector<Position> validTiles = getValidTiles(board);
+        std::vector<Position> validTiles = getValidTiles(board); //TODO: make bot not be able to choose the positions where their own mines are placed
         int randomPos = rand() % validTiles.size();
         if(askCoordinate == 0){
             ret = std::to_string(validTiles[randomPos].xpos);
@@ -24,7 +24,7 @@ std::string getPlayerInput(Board board, Player player, int askCoordinate = 0){
 
 void chooseMinePositions(Board &board, Player &player){
     for(int m = 0; m < player.mineCount; m++){
-        printField(board, player.id);
+        printBoard(board, player.id);
         bool validPlacement = false;
         Mine mine;
         while(validPlacement == false){
@@ -55,7 +55,7 @@ void chooseMinePositions(Board &board, Player &player){
 }
 
 void guess(Board &board, Player player){
-    printField(board, player.id);
+    printBoard(board, player.id);
     Position guess;
     int isGuessValid = false; //flag to check if the inputed position is valid. If not, ask the player again
     while(isGuessValid == false){
