@@ -7,7 +7,7 @@
 #include <utility>
 #include "board.h"
 
-std::string getPlayerInput(Board board, Player player, int askCoordinate);
+std::string getPlayerInput(Board &board, Player player, int askCoordinate);
 
 void chooseMinePositions(Board &board, Player &player);
 

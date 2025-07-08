@@ -15,12 +15,12 @@ int gameLoop(Board &board){
     */
     int winner = -1; 
     while (winner == -1){
-        roundStartStage(board);
-        winner = minePlacementStage(board);
+        gameStages::roundStart(board);
+        winner = gameStages::minePlacement(board);
         if(winner != -1) return winner;
-        winner = guessingStage(board);
+        winner = gameStages::guessing(board);
         if(winner != -1) return winner;
-        roundEndStage(board);
+        gameStages::roundEnd(board);
     }
     return winner;
     return 0;
