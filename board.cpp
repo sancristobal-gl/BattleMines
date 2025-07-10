@@ -7,21 +7,21 @@ bool Position::operator==(const Position &b) const{
 }
 
 bool Mine::operator==(const Mine &b) const{
-    return ((xpos == b.xpos)
-        && (ypos == b.ypos))
+    return ((position.xpos == b.position.xpos)
+        && (position.ypos == b.position.ypos))
         && (owner == b.owner);
 }
 
 bool Mine::operator==(const Position &b) const{
-    return ((xpos == b.xpos)
-        && (ypos == b.ypos));
+    return ((position.xpos == b.xpos)
+        && (position.ypos == b.ypos));
 }
 
 Board::~Board(){
-    delete(players);
+    delete[] players;
 }
 
-bool isPositionValid(Board const& board, Position pos){ //check if pos if withing acceptable values 
+bool isPositionValid(Board const& board, Position const& pos){ //check if pos if withing acceptable values 
     //If the position is outside the board, return false;
     if((pos.xpos < 1)
     || (pos.ypos < 1)
@@ -52,7 +52,7 @@ std::vector<Position> getValidTiles(Board const& board){
     return validPositions;
 }
 
-int getValuesWithinRange(std::string prompt, int min, int max){ //function to input an int value within range, used for board initialization, probably could be reporopused for other uses
+int getValuesWithinRange(std::string const& prompt, int min, int max){ //function to input an int value within range, used for board initialization, probably could be reporopused for other uses
     int ret = min-1;
     while ((ret < min) || (ret > max)){
         std::cout << prompt << std::endl;
@@ -111,7 +111,7 @@ void printBoardAuxiliars::showPositionStatus(Board const& board, unsigned int x,
     bool mineInPos=false;
     if (perspective != undefinedPerspective){ //show ony the mines belonging to player
         for(std::vector<Mine>::const_iterator it = board.placedMines.begin(); it != board.placedMines.end(); it++){
-            if(it->xpos == x && it->ypos == y){
+            if(it->position.xpos == x && it->position.ypos == y){
                 if(it->owner == perspective){
                     mineInPos=true;
                     break;
@@ -163,8 +163,12 @@ void printBoard(Board const& board, int perspective){
     }
 }
 
-void disablePosition(Board &board, Position disabledPosition){
+void disablePosition(Board &board, Position const& disabledPosition){
     board.disabledPositions.push_back(disabledPosition);
+}
+
+void disablePosition(Board &board, Mine const& disabledMine){
+    board.disabledPositions.push_back(disabledMine.position);
 }
 
 bool removeMine(Board &board, Mine mine){
@@ -191,15 +195,21 @@ void disableTilesUsed(Board &board){
 //if no players have mines, game is a draw
 //TODO: refactor to support more than 2 players
 int getWinningPlayer(Board const& board){
-    int winner = -1;
     if(board.players[0].mineCount <= 0){
         if(board.players[1].mineCount <= 0){
-            winner = 0;
+            return 0;
         }
-        else winner=2;
+        else return 2;
     }
     else if(board.players[1].mineCount <= 0){
-        winner=1;
+        return 1;
     }
-    return winner;
+    int maxPlayerMines = 0;
+    //check if there are enough tiles to accomodate every player's mines, if not, the game is a draw
+    for(int i = 0; i < board.playerCount; i++){
+        if(board.players[i].mineCount < maxPlayerMines) maxPlayerMines = board.players[i].mineCount;
+    }
+    if(getValidTiles(board).size() < maxPlayerMines) return 0;
+
+    return -1;
 }

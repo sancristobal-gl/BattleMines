@@ -10,7 +10,9 @@ struct Position{
     bool operator==(const Position &b) const;
 };
 
-struct Mine:Position{
+struct Mine{
+    Position position;
+
     int owner = -1;
 
     bool operator==(const Mine &b) const;
@@ -44,7 +46,9 @@ struct Board{
 
     ~Board();
 };
-bool isPositionValid(Board const& board, Position pos);
+bool isPositionValid(Board const& board, Position const& pos);
+
+int getValuesWithinRange(std::string const& prompt, int min, int max);
 
 std::vector<Position> getValidTiles(Board const& board);
 
@@ -52,7 +56,7 @@ Board createBoard();
 
 void printBoard(Board const& board, int perspective = -1);
 
-void disablePosition(Board &board, Position disabledPosition);
+void disablePosition(Board &board, Position const& disabledPosition);
 
 bool removeMine(Board &board, Mine mine);
 

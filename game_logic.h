@@ -11,6 +11,6 @@ std::string getPlayerInput(Board &board, Player player, int askCoordinate);
 
 void chooseMinePositions(Board &board, Player &player);
 
-void guess(Board &board, Player player);
+void guess(Board &board, Player & player);
 
 bool chechMineCollision(Board &board);

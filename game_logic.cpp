@@ -28,13 +28,15 @@ void chooseMinePositions(Board &board, Player &player){
         bool validPlacement = false;
         Mine mine;
         while(validPlacement == false){
+            Position pos;
             std::cout << "Player " << player.id + 1 << "!, choose your mine's positions" << std::endl;
             std::cout << "Choose the x position of mine " << m+1 << ": ";
-            mine.xpos = std::stoi(getPlayerInput(board, player, 0));;
+            pos.xpos = std::stoi(getPlayerInput(board, player, 0));;
             std::cout << "Choose the y position of mine " << m+1 << ": ";
-            mine.ypos = std::stoi(getPlayerInput(board, player, 1));;
+            pos.ypos = std::stoi(getPlayerInput(board, player, 1));;
             mine.owner = player.id;
-            validPlacement = isPositionValid(board, mine);
+            mine.position = pos;
+            validPlacement = isPositionValid(board, pos);
             if(validPlacement==false){
                 std::cout << "Invalid position! Choose again" << std::endl;
             }
@@ -54,7 +56,7 @@ void chooseMinePositions(Board &board, Player &player){
     }
 }
 
-void guess(Board &board, Player player){
+void guess(Board &board, Player & player){
     printBoard(board, player.id);
     Position guess;
     int isGuessValid = false; //flag to check if the inputed position is valid. If not, ask the player again
@@ -98,15 +100,17 @@ bool chechMineCollision(Board &board){
     bool wasThereCollision = true;
     std::vector<Mine> conflictingMines;
     for(int i = 0; i<board.placedMines.size(); i++){
+        Position mine1Pos = board.placedMines[i].position;
         conflictingMines.push_back(board.placedMines[i]);
         for(int j = i+1; j<board.placedMines.size(); j++){
-            if(board.placedMines[i].xpos == board.placedMines[j].xpos && board.placedMines[i].ypos == board.placedMines[j].ypos){ //they'll be equal if they share the same positoon, the owner is not a factor
+            Position mine2Pos = board.placedMines[j].position;
+            if(mine1Pos.xpos == mine2Pos.xpos && mine1Pos.ypos == mine2Pos.ypos){ //they'll be equal if they share the same positoon, the owner is not a factor
                 conflictingMines.push_back(board.placedMines[j]);
             }
         }
         if(conflictingMines.size() > 1){
             i--;
-            std::cout << "Colisionaron minas en " << conflictingMines[0].xpos << ", " << conflictingMines[0].ypos << std::endl; //conflictingMines siempre tendra un valor en [0]
+            std::cout << "Colisionaron minas en " << conflictingMines[0].position.xpos << ", " << conflictingMines[0].position.ypos << std::endl; //conflictingMines will always have a value at [0]
             for(Mine mine : conflictingMines){
                 removeMine(board, mine);
                 wasThereCollision = true;
