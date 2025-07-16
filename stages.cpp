@@ -20,7 +20,8 @@ int gameStages::minePlacement(Board &board){
         system("pause");
         system("cls");
     }
-    return getWinningPlayer(board); //every end step, check if a winner has been decided
+    eliminatePlayers(board);
+    return gameEndCondition(board); //every end step, check if a winner has been decided
 }
 
 int gameStages::guessing(Board &board){
@@ -29,7 +30,8 @@ int gameStages::guessing(Board &board){
         guess(board, board.players[p]);
         system("cls");
     }
-    return getWinningPlayer(board);
+    eliminatePlayers(board);
+    return gameEndCondition(board);
 }
 
 void gameStages::roundEnd(Board &board){

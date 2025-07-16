@@ -73,14 +73,16 @@ Board createBoard(){
     board.width = getValuesWithinRange("choose the width of the field", 5, 10);
     board.height = getValuesWithinRange("choose the height of the field", 5, 10);
     mineCount = getValuesWithinRange("choose the number of mines on the field", 3, 8);
-    board.playerCount = 2; //TODO: make value be chosen by the player once support for more than two players is added
+    board.playerCount = getValuesWithinRange("choose the number of mines on the field", 2, 8);
     board.players = new Player[board.playerCount]; //dynamic array since we don't know the number of players beforehand
     for(int p = 0; p < board.playerCount; p++){
         Player player;
         player.mineCount = mineCount;
-        player.id = p;
-        if(p==1 && board.gameType == PVE){ //set player 2 to be controlled by AI, may need to be refactored when support for more than 2 players is implemented
-            player.isAI = true;
+        player.id = p+1;
+        if(board.gameType == PVE){
+            if(p > 1){
+                player.isAI = true;
+            }
         }
         board.players[p] = player;
         }
@@ -191,25 +193,40 @@ void disableTilesUsed(Board &board){
     }
 }
 
+//TODO: Refactor when board.players is changed from array to std::vector
+void eliminatePlayers(Board& board){
+    int newPlayerCount = board.playerCount;
+    std::vector<Player> newPlayerList;
+    for(int i = 0; i<board.playerCount; i++){
+        if (board.players[i].mineCount <= 0){
+            newPlayerCount--;
+        }
+        else{
+            newPlayerList.push_back(board.players[i]);
+        }
+    }
+    Player* players = new Player[newPlayerCount];
+    for(int i = 0; i<newPlayerCount; i++){
+        players[i] = newPlayerList[i];
+    }
+    delete[] board.players;
+    board.players = players;
+    board.playerCount = newPlayerCount;
+}
 //when only one player has mines remaining, they win the game
 //if no players have mines, game is a draw
 //TODO: refactor to support more than 2 players
-int getWinningPlayer(Board const& board){
-    if(board.players[0].mineCount <= 0){
-        if(board.players[1].mineCount <= 0){
-            return 0;
-        }
-        else return 2;
-    }
-    else if(board.players[1].mineCount <= 0){
-        return 1;
-    }
-    int maxPlayerMines = 0;
+//Should make it so that players without mines are eliminated and the other players remain in the game
+int gameEndCondition(Board & board){
+    if(board.playerCount == 1) return board.players[0].id; //player wins if they're the only one remaining
+    if(board.playerCount == 0) return 0; //if no players remain, game is a draw
+
     //check if there are enough tiles to accomodate every player's mines, if not, the game is a draw
+    int maxPlayerMines = 0;
     for(int i = 0; i < board.playerCount; i++){
         if(board.players[i].mineCount < maxPlayerMines) maxPlayerMines = board.players[i].mineCount;
     }
     if(getValidTiles(board).size() < maxPlayerMines) return 0;
 
-    return -1;
+    return -1; //else, the game is not over
 }

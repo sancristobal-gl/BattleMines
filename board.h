@@ -25,7 +25,7 @@ struct Player{
     Mine* mines = nullptr;
     int mineCount = 0;
     bool operator==(const Player b){
-        return ((id == b.id));
+        return (id == b.id);
     }
     bool isAI = false;
 };
@@ -62,4 +62,6 @@ bool removeMine(Board &board, Mine mine);
 
 void disableTilesUsed(Board &board);
 
-int getWinningPlayer(Board const& board);
+void eliminatePlayers(Board& board);
+
+int gameEndCondition(Board & board);
