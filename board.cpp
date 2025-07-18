@@ -35,6 +35,9 @@ bool isPositionValid(Board const& board, Position const& pos){ //check if pos if
     return true;
 }
 
+Player getPlayer(Board const& board, int playerID){
+    return board.players[playerID-1];
+}
 //gets all possible valid positions
 //mainly for bot logic
 std::vector<Position> getValidTiles(Board const& board){ 
@@ -73,14 +76,14 @@ Board createBoard(){
     board.width = getValuesWithinRange("choose the width of the field", 5, 10);
     board.height = getValuesWithinRange("choose the height of the field", 5, 10);
     mineCount = getValuesWithinRange("choose the number of mines on the field", 3, 8);
-    board.playerCount = getValuesWithinRange("choose the number of mines on the field", 2, 8);
+    board.playerCount = getValuesWithinRange("choose the number of players", 2, 8);
     board.players = new Player[board.playerCount]; //dynamic array since we don't know the number of players beforehand
     for(int p = 0; p < board.playerCount; p++){
         Player player;
         player.mineCount = mineCount;
         player.id = p+1;
         if(board.gameType == PVE){
-            if(p > 1){
+            if(p > 0){
                 player.isAI = true;
             }
         }
@@ -114,7 +117,7 @@ void printBoardAuxiliars::showPositionStatus(Board const& board, unsigned int x,
     if (perspective != undefinedPerspective){ //show ony the mines belonging to player
         for(std::vector<Mine>::const_iterator it = board.placedMines.begin(); it != board.placedMines.end(); it++){
             if(it->position.xpos == x && it->position.ypos == y){
-                if(it->owner == perspective){
+                if(it->owner == perspective - 1){ //id is player position in array + 1
                     mineInPos=true;
                     break;
                 }

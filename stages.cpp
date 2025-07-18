@@ -2,9 +2,12 @@
 
 void gameStages::roundStart(Board const& board){
     for(int p = 0; p < board.playerCount; p++){
-        std::cout << "Player " << board.players[p].id + 1 << " mine count: " << board.players[p].mineCount << std::endl;
+        std::cout << "Player " << board.players[p].id << " mine count: " << board.players[p].mineCount << std::endl;
     }
     printBoard(board);
+    for(int i = 0; i < board.playerCount; i++){
+        std::cout << "player " << i+1 << " is " << board.players[i].isAI << std::endl;
+    }
     std::cout << "Press enter to commence the round!" << std::endl;
     system("pause");
     system("cls");
@@ -12,7 +15,7 @@ void gameStages::roundStart(Board const& board){
 
 int gameStages::minePlacement(Board &board){
     for(int p = 0; p < board.playerCount; p++){
-        std::cout << "Player " << board.players[p].id + 1 << "'s turn to place their mines:" << std::endl;
+        std::cout << "Player " << board.players[p].id << "'s turn to place their mines:" << std::endl;
         chooseMinePositions(board, board.players[p]);
     }
     bool wasThereCollision = chechMineCollision(board); //check if mines collide, if they do, notify the player
@@ -26,7 +29,7 @@ int gameStages::minePlacement(Board &board){
 
 int gameStages::guessing(Board &board){
     for(int p = 0; p < board.playerCount; p++){
-        std::cout << "Player " << board.players[p].id + 1 << "'s turn to guess:" << std::endl;
+        std::cout << "Player " << board.players[p].id << "'s turn to guess:" << std::endl;
         guess(board, board.players[p]);
         system("cls");
     }
