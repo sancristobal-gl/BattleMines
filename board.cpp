@@ -106,7 +106,9 @@ int gameEndCondition(Board &board) {
 	for (int i = 0; i < board.playerCount; i++) {
 		if (board.players[i].mineCount < maxPlayerMines) maxPlayerMines = board.players[i].mineCount;
 	}
-	if (getValidTiles(board).size() < maxPlayerMines) return 0;
+	int tilesRemaining = getValidTiles(board).size();
+	std::cout << "tiles remaining: " << tilesRemaining << std::endl;
+	if (tilesRemaining < maxPlayerMines) return 0;
 
 	return -1; // else, the game is not over
 }

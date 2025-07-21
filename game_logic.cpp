@@ -53,7 +53,7 @@ void chooseMinePositions(Board &board, Player &player) {
 		while (validPlacement == false) {
 			std::cout << "Choose the position of mine " << m << std::endl;
 			mine.position = getPlayerInput(board, player);
-			mine.owner = player.id - 1;
+			mine.owner = player.id;
 			validPlacement = isPositionValid(board, mine.position);
 			if (validPlacement == false) {
 				std::cout << "Invalid position! Choose again" << std::endl;
@@ -95,21 +95,22 @@ void guess(Board &board, Player &player) {
 				removeMine(board, *it);
 				disablePosition(board, guess);
 				std::cout << "You found an enemy mine!" << std::endl;
-				system("pause");
-				return;
+				break;
 			}
 		} else
 			disablePosition(board, guess);
 	}
+	std::cout << "No mine has been found" << std::endl;
 	return;
 }
 
 // function to be called after each player has placed their mines
 // colliding mines are annihilated and removed from their owner's mine pool
 bool chechMineCollision(Board &board) {
-	bool wasThereCollision = true;
+	bool wasThereCollision = false;
 	std::vector<Mine> conflictingMines;
-	for (int i = 0; i < board.placedMines.size(); i++) {
+	for (int i = 0; i < board.placedMines.size() - 1; i++) { //size is -- because the vector value in i is compared to the other values on his right
+		std::cout << "DEBUG clearing mines... iteration: " << i << " placedMines size: " << board.placedMines.size() << std::endl;
 		Position mine1Pos = board.placedMines[i].position;
 		conflictingMines.push_back(board.placedMines[i]);
 		for (int j = i + 1; j < board.placedMines.size(); j++) {
@@ -119,10 +120,10 @@ bool chechMineCollision(Board &board) {
 			}
 		}
 		if (conflictingMines.size() > 1) {
-			i--;
-			std::cout << "Colisionaron minas en " << conflictingMines[0].position.xpos << ", " << conflictingMines[0].position.ypos << std::endl; // conflictingMines will always have a value at [0]
+			i--; // i is -- since the current element is to be deleted, meaning the "next" iteration should check the element that will take i's place 
+			std::cout << "Colisionaron " << conflictingMines.size() << " minas en " << conflictingMines[0].position.xpos << ", " << conflictingMines[0].position.ypos << std::endl; // conflictingMines will always have a value at [0]
 			for (Mine mine: conflictingMines) {
-				removeMine(board, mine);
+				std::cout << removeMine(board, mine) << std::endl;
 				wasThereCollision = true;
 			}
 		}

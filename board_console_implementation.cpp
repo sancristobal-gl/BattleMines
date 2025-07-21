@@ -27,7 +27,7 @@ void printBoardAuxiliars::showPositionStatus(Board const &board, unsigned int x,
 	if (perspective != undefinedPerspective) { // show ony the mines belonging to player
 		for (std::vector<Mine>::const_iterator it = board.placedMines.begin(); it != board.placedMines.end(); it++) {
 			if (it->position.xpos == x && it->position.ypos == y) {
-				if (it->owner == perspective - 1) { // id is player position in array + 1
+				if (it->owner == perspective) { // id is player position in array + 1
 					mineInPos = true;
 					break;
 				}

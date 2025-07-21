@@ -18,6 +18,8 @@ struct Mine {
 	bool operator==(const Mine &b) const;
 
 	bool operator==(const Position &b) const;
+
+	
 };
 
 struct Player {
