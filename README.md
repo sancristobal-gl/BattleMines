@@ -1,1 +1,1 @@
-Development branch, please use the main branch to evaluate my work TODO: make a proper readme
+Main branch
