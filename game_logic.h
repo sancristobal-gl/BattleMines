@@ -1,4 +1,4 @@
-#include "board.h"
+#include "board_console_implementation.h"
 #include <cstdlib>
 #include <ctime>
 #include <iostream>

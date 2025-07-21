@@ -2,6 +2,32 @@
 
 // gets input from console if player is human
 // generates random input if player is bot
+Board createBoard() {
+	Board board;
+	bool created = false;
+	int width = NULL;
+	int height = NULL;
+	int mineCount = 0;
+	board.gameType = static_cast<gameType>(getValuesWithinRange("choose game mode (0=PVP, 1=PVE)", 0, 1)); // not sure if this is good practice
+	board.width = getValuesWithinRange("choose the width of the field", 5, 10);
+	board.height = getValuesWithinRange("choose the height of the field", 5, 10);
+	mineCount = getValuesWithinRange("choose the number of mines on the field", 3, 8);
+	board.playerCount = getValuesWithinRange("choose the number of players", 2, 8);
+	board.players = new Player[board.playerCount]; // dynamic array since we don't know the number of players beforehand
+	for (int p = 0; p < board.playerCount; p++) {
+		Player player;
+		player.mineCount = mineCount;
+		player.id = p + 1;
+		if (board.gameType == PVE) {
+			if (p > 0) {
+				player.isAI = true;
+			}
+		}
+		board.players[p] = player;
+	}
+	return board;
+}
+
 Position getPlayerInput(Board &board, Player player) {
 	Position pos;
 	if (player.isAI == false) {

@@ -43,18 +43,12 @@ struct Board {
 	int playerCount = 0;
 	std::vector<Mine> placedMines;
 	gameType gameType = PVP;
-
 	~Board();
 };
+
 bool isPositionValid(Board const &board, Position const &pos);
 
-int getValuesWithinRange(std::string const &prompt, int min, int max);
-
 std::vector<Position> getValidTiles(Board const &board);
-
-Board createBoard();
-
-void printBoard(Board const &board, int perspective = -1);
 
 void disablePosition(Board &board, Position const &disabledPosition);
 
