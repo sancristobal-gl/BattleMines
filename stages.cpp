@@ -5,9 +5,6 @@ void gameStages::roundStart(Board const &board) {
 		std::cout << "Player " << board.players[p].id << " mine count: " << board.players[p].mineCount << std::endl;
 	}
 	printBoard(board);
-	for (int i = 0; i < board.playerCount; i++) {
-		std::cout << "player " << i + 1 << " is " << board.players[i].isAI << std::endl;
-	}
 	std::cout << "Press enter to commence the round!" << std::endl;
 	system("pause");
 	system("cls");
