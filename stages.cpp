@@ -22,7 +22,7 @@ int gameStages::minePlacement(Board &board) {
 		std::cout << "Player " << board.players[p].id << "'s turn to place their mines:" << std::endl;
 		chooseMinePositions(board, board.players[p]);
 	}
-	bool wasThereCollision = chechMineCollision(board); // check if mines collide, if they do, notify the player
+	bool wasThereCollision = checkMineCollision(board); // check if mines collide, if they do, notify the player
 	if (wasThereCollision == true) {
 		std::cout << "DEBUG: JKRGNWRLIGNWRJGNWRL" << std::endl;
 		waitForInput();

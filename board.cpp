@@ -18,10 +18,14 @@ Board::~Board() {
 
 bool isPositionValid(Board const &board, Position const &pos) { // check if pos if withing acceptable values
 	// If the position is outside the board, return false;
-	if ((pos.xpos < 1) || (pos.ypos < 1) || (pos.xpos > board.width) || (pos.ypos > board.height)) return false;
+	if ((pos.xpos < 1) || (pos.ypos < 1) || (pos.xpos > board.width) || (pos.ypos > board.height)) {
+		return false;
+	}
 	// if the position is disabled, return false
 	for (int i = 0; i < board.disabledPositions.size(); i++) {
-		if (pos == board.disabledPositions[i]) return false;
+		if (pos == board.disabledPositions[i]) {
+			return false;
+		}
 	}
 	// else, return true
 	return true;
@@ -34,13 +38,11 @@ Player getPlayer(Board const &board, int playerID) {
 // mainly for bot logic
 std::vector<Position> getValidTiles(Board const &board) {
 	std::vector<Position> validPositions;
-	for (int x = 1; x <= board.width; x++) {
-		for (int y = 1; y <= board.height; y++) {
-			Position pos;
-			pos.xpos = x;
-			pos.ypos = y;
+	for (unsigned int x = 1; x <= board.width; x++) {
+		for (unsigned int y = 1; y <= board.height; y++) {
+			Position pos{x, y};
 			if (isPositionValid(board, pos)) {
-				validPositions.push_back(pos);
+				validPositions.push_back(std::move(pos));
 			}
 		}
 	}
@@ -48,11 +50,15 @@ std::vector<Position> getValidTiles(Board const &board) {
 }
 
 void disablePosition(Board &board, Position const &disabledPosition) {
-	board.disabledPositions.push_back(disabledPosition);
+	Position pos = disabledPosition;
+	board.disabledPositions.push_back(pos);
+	std::cout << "DEBUG disabled position (pos)" << std::endl;
 }
 
 void disablePosition(Board &board, Mine const &disabledMine) {
-	board.disabledPositions.push_back(disabledMine.position);
+	Position pos = disabledMine.position;
+	board.disabledPositions.push_back(pos);
+	std::cout << "DEBUG disabled position (mine)" << std::endl;
 }
 
 bool removeMine(Board &board, Mine mine) {
@@ -104,7 +110,9 @@ int gameEndCondition(Board &board) {
 	// check if there are enough tiles to accomodate every player's mines, if not, the game is a draw
 	int maxPlayerMines = 0;
 	for (int i = 0; i < board.playerCount; i++) {
-		if (board.players[i].mineCount < maxPlayerMines) maxPlayerMines = board.players[i].mineCount;
+		if (board.players[i].mineCount > maxPlayerMines) {
+			maxPlayerMines = board.players[i].mineCount;
+		}
 	}
 	int tilesRemaining = getValidTiles(board).size();
 	std::cout << "tiles remaining: " << tilesRemaining << std::endl;

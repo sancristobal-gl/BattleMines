@@ -1,8 +1,11 @@
 #include "board_console_implementation.h"
 
-const int undefinedPerspective = -1;
+const int undefinedPerspective = -1; //perspective represent the player who the board is being printed for
+//a player should be able to see the position of their own hidden mines but not of the other players
 
-namespace printBoardAuxiliars {
+const int charsPerLabel = 3;
+
+namespace boardConsoleDisplayHelper {
 	void showPositionStatus(Board const &board, unsigned int x, unsigned int y, int perspective = undefinedPerspective);
 
 	void printRow(Board const &board, unsigned int y);
@@ -10,9 +13,9 @@ namespace printBoardAuxiliars {
 	void printColumnInRow(Board const &board, unsigned int x, unsigned int y, int perspective);
 }
 
-void printBoardAuxiliars::showPositionStatus(Board const &board, unsigned int x, unsigned int y, int perspective) {
+void boardConsoleDisplayHelper::showPositionStatus(Board const &board, unsigned int x, unsigned int y, int perspective) {
 	// print the status of the position {x, y}
-	//(" " = no existe, "O" = posicion en juego/estado desconocido, "M" = mina del jugador en la posicion)
+	//(" " = doesn't exist, "O" = valid position with unknown contents, "M" = player mine in position)
 	bool isPositionEnabled = true;
 
 	for (int i = 0; i < board.disabledPositions.size(); i++) {
@@ -42,11 +45,11 @@ void printBoardAuxiliars::showPositionStatus(Board const &board, unsigned int x,
 		std::cout << "  O";
 }
 
-void printBoardAuxiliars::printRow(Board const &board, unsigned int y) {
-	int spaceLength = (3 - std::to_string(y).length());
-	if (y == 0) { // si es la primera fila, imprimimos solo espacio
+void boardConsoleDisplayHelper::printRow(Board const &board, unsigned int y) {
+	int spaceLength = (charsPerLabel - std::to_string(y).length());
+	if (y == 0) { // if is first row, we print empty space
 		std::cout << "   ";
-	} else { // caso contrario, imprimimos el numero de la fila
+	} else { // else, print row label
 		std::cout << y;
 		for (int space = 0; space < spaceLength; space++) {
 			std::cout << ' ';
@@ -54,15 +57,15 @@ void printBoardAuxiliars::printRow(Board const &board, unsigned int y) {
 	}
 }
 
-void printBoardAuxiliars::printColumnInRow(Board const &board, unsigned int x, unsigned int y, int perspective) {
-	int spaceLength = (3 - std::to_string(x).length());
-	if (y == 0) { // si es la primera fila, imprimimos los numeros de las columnas
+void boardConsoleDisplayHelper::printColumnInRow(Board const &board, unsigned int x, unsigned int y, int perspective) {
+	int spaceLength = (charsPerLabel - std::to_string(x).length());
+	if (y == 0) { // if it's first column, we print column label
 		for (int space = 0; space < spaceLength; space++) {
 			std::cout << ' ';
 		};
 		std::cout << std::to_string(x);
-	} else { // en caso contrario, imprimimos el estado de la posicion
-		printBoardAuxiliars::showPositionStatus(board, x, y, perspective);
+	} else { // else, print position status
+		boardConsoleDisplayHelper::showPositionStatus(board, x, y, perspective);
 	}
 	return;
 }
@@ -70,10 +73,10 @@ void printBoardAuxiliars::printColumnInRow(Board const &board, unsigned int x, u
 // print board to console
 // may be depreciated if an UI is implemented in the future
 void printBoard(Board const &board, int perspective) {
-	for (int y = 0; y <= board.height; y++) { // para cada fila
-		printBoardAuxiliars::printRow(board, y);
-		for (int x = 1; x <= board.width; x++) { // seguido del numero de fila, imprimimos todas las posiciones de la fila
-			printBoardAuxiliars::printColumnInRow(board, x, y, perspective);
+	for (int y = 0; y <= board.height; y++) { // for each row
+		boardConsoleDisplayHelper::printRow(board, y);
+		for (int x = 1; x <= board.width; x++) { // next to the row label, we print all positions in row
+			boardConsoleDisplayHelper::printColumnInRow(board, x, y, perspective);
 		}
 		std::cout << std::endl;
 	}
