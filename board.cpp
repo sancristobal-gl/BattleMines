@@ -22,8 +22,8 @@ bool isPositionValid(Board const &board, Position const &pos) { // check if pos 
 		return false;
 	}
 	// if the position is disabled, return false
-	for (int i = 0; i < board.disabledPositions.size(); i++) {
-		if (pos == board.disabledPositions[i]) {
+	for (auto it = board.disabledPositions.begin(); it != board.disabledPositions.end(); it++) {
+		if (pos == *it) {
 			return false;
 		}
 	}
@@ -51,13 +51,13 @@ std::vector<Position> getValidTiles(Board const &board) {
 
 void disablePosition(Board &board, Position const &disabledPosition) {
 	Position pos = disabledPosition;
-	board.disabledPositions.push_back(pos);
+	board.disabledPositions.insert(pos);
 	std::cout << "DEBUG disabled position (pos)" << std::endl;
 }
 
 void disablePosition(Board &board, Mine const &disabledMine) {
 	Position pos = disabledMine.position;
-	board.disabledPositions.push_back(pos);
+	board.disabledPositions.insert(pos);
 	std::cout << "DEBUG disabled position (mine)" << std::endl;
 }
 

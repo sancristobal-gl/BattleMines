@@ -18,8 +18,8 @@ void boardConsoleDisplayHelper::showPositionStatus(Board const &board, unsigned 
 	//(" " = doesn't exist, "O" = valid position with unknown contents, "M" = player mine in position)
 	bool isPositionEnabled = true;
 
-	for (int i = 0; i < board.disabledPositions.size(); i++) {
-		Position disabledPos = board.disabledPositions[i];
+	for (auto it = board.disabledPositions.begin(); it != board.disabledPositions.end(); it++) {
+		Position disabledPos = *it;
 		Position pos = {x, y};
 		if (disabledPos == pos) {
 			isPositionEnabled = false;
