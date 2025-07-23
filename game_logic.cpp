@@ -47,22 +47,22 @@ Position getPlayerInput(Board &board, Player player) {
 }
 
 void chooseMinePositions(Board &board, Player &player) {
-	std::cout << "Player " << player.id << "!, choose your mine's positions" << std::endl;
+	printToPlayer(player, "Player " + std::to_string(player.id) + "!, choose your mine's positions");
 	for (int m = 0; m < player.mineCount; m++) {
 		printBoard(board, player.id);
 		bool validPlacement = false;
 		Mine mine;
 		while (validPlacement == false) {
-			std::cout << "Choose the position of mine " << m << std::endl;
+			printToPlayer(player, "Choose the position of mine " + std::to_string(m));
 			mine.position = getPlayerInput(board, player);
 			mine.owner = player.id;
 			validPlacement = isPositionValid(board, mine.position);
 			if (validPlacement == false) {
-				std::cout << "Invalid position! Choose again" << std::endl;
+				printToPlayer(player, "Invalid position! Choose again");
 			}
 			for (std::vector<Mine>::iterator it = board.placedMines.begin(); it != board.placedMines.end(); it++) {
 				if (*it == mine) { // for them to be equal, they need to share position and owner
-					std::cout << "You already placed a mine there! Choose again" << std::endl;
+					printToPlayer(player, "You already placed a mine there! Choose again");
 					validPlacement = false;
 				}
 			}
