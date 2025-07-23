@@ -1,3 +1,2 @@
-Main branch TODO: make a proper readme
-
+Practice project for game development, not intended for public use 
 
