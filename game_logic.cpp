@@ -13,7 +13,6 @@ Board createBoard() {
 	board.height = getValuesWithinRange("choose the height of the field", 5, 10);
 	mineCount = getValuesWithinRange("choose the number of mines on the field", 3, 8);
 	board.playerCount = getValuesWithinRange("choose the number of players", 2, 8);
-	board.players = new Player[board.playerCount]; // dynamic array since we don't know the number of players beforehand
 	for (int p = 0; p < board.playerCount; p++) {
 		Player player;
 		player.mineCount = mineCount;
@@ -23,7 +22,7 @@ Board createBoard() {
 				player.isAI = true;
 			}
 		}
-		board.players[p] = player;
+		board.players.push_back(player);
 	}
 	return board;
 }
@@ -122,12 +121,10 @@ bool checkMineCollision(Board &board) {
 			i--;																																									// i is -- since the current element is to be deleted, meaning the "next" iteration should check the element that will take i's place
 			std::cout << "Colisionaron " << conflictingMines.size() << " minas en " << conflictingMines[0].position.xpos << ", " << conflictingMines[0].position.ypos << std::endl; // conflictingMines will always have a value at [0]
 			for (Mine mine: conflictingMines) {
-				std::cout << removeMine(board, mine) << std::endl;
+				removeMine(board, mine);
 				wasThereCollision = true;
 			}
 		}
-		std::cout << "clearing mines" << std::endl;
-
 		conflictingMines.clear();
 	}
 	return wasThereCollision;

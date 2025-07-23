@@ -50,7 +50,7 @@ struct Board {
 	int width = 0;
 	int height = 0;
 	std::unordered_set<Position, PositionHash> disabledPositions;
-	Player *players = nullptr;
+	std::vector<Player> players;
 	int playerCount = 0;
 	std::vector<Mine> placedMines;
 	gameType gameType = PVP;

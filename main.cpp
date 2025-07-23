@@ -9,9 +9,10 @@
 
 int gameLoop(Board &board) {
 	/*
-	winner = 0, empate
-	winner = 1, gano jugador 1
-	winner = 2, gano jugador 2
+	winner = 0, tie
+	winner = 1, player 1 won
+	winner = 2, player 2 won
+	etc
 	*/
 	int winner = -1;
 	while (winner == -1) { // could probably iterate over an array of function pointers?
