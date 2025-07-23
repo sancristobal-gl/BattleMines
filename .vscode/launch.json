@@ -1,7 +1,18 @@
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
-    "configurations": []
+    "configurations": [
+        {
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "name": "LLDB Debug",
+            "stopAtEntry": false,
+            "type": "cppdbg",
+            "externalConsole": false,
+            "environment": [],
+            "request": "launch",
+            "program": "C:\\Users\\santiago.cristobal\\Documents\\BattleMines\\BattleMines\\a.exe",
+            "miDebuggerPath": "C:\\Users\\santiago.cristobal\\Downloads\\clang+llvm-20.1.6\bin\\lldb.exe",
+            "MIMode": "lldb"
+        }
+    ]
 }

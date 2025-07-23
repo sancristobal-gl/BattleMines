@@ -1,7 +1,7 @@
 #include "board_console_implementation.h"
 
-const int undefinedPerspective = -1; //perspective represent the player who the board is being printed for
-//a player should be able to see the position of their own hidden mines but not of the other players
+const int undefinedPerspective = -1; // perspective represent the player who the board is being printed for
+// a player should be able to see the position of their own hidden mines but not of the other players
 
 const int charsPerLabel = 3;
 
@@ -13,6 +13,12 @@ namespace boardConsoleDisplayHelper {
 	void printColumnInRow(Board const &board, unsigned int x, unsigned int y, int perspective);
 }
 
+void printToPlayer(Player player, std::string message){
+	if (!player.isAI){
+		std::cout << message << std::endl;
+	}
+	
+}
 void boardConsoleDisplayHelper::showPositionStatus(Board const &board, unsigned int x, unsigned int y, int perspective) {
 	// print the status of the position {x, y}
 	//(" " = doesn't exist, "O" = valid position with unknown contents, "M" = player mine in position)

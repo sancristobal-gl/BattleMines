@@ -1,9 +1,9 @@
+#include <bitset> //for debugging
 #include <cstdlib>
 #include <iostream>
 #include <string>
 #include <unordered_set>
 #include <vector>
-#include <bitset> //for debugging
 
 struct Position {
 	unsigned int xpos = 0;
@@ -12,12 +12,12 @@ struct Position {
 	bool operator==(const Position &pos) const;
 };
 
-struct PositionHash { //hashing implementation for Position
-	size_t operator()(const Position& pos) const{
-		//debugging;
+struct PositionHash { // hashing implementation for Position
+	size_t operator()(const Position &pos) const {
+		// debugging;
 		//std::bitset<64> ea(((long long)pos.xpos << 32) ^ (long long)pos.ypos);
 		//std::cout << ea << std::endl;
-		return std::hash<long long>()(((long long)pos.xpos << 32) ^ (long long)pos.ypos); //xpos and ypos are 32bit unsigned integers, we concatenate them into a 64bit long long to create a key
+		return std::hash<long long>()(((long long)pos.xpos << 32) ^ (long long)pos.ypos); // xpos and ypos are 32bit unsigned integers, we concatenate them into a 64bit long long to create a key
 	}
 };
 

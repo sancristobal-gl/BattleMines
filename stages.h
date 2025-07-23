@@ -7,5 +7,5 @@ namespace gameStages {
 
 	int guessing(Board &board);
 
-	void roundEnd(Board &board);
+	int roundEnd(Board &board);
 }

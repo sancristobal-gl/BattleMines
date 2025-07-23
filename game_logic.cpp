@@ -28,8 +28,8 @@ Board createBoard() {
 	return board;
 }
 
-Position getRandomValidPosition(Board &board, Player player) { //helper function for bot players
-	//player parameter is currently unused, but it will be used in the future
+Position getRandomValidPosition(Board &board, Player player) { // helper function for bot players
+	// player parameter is currently unused, but it will be used in the future
 	std::vector<Position> validTiles = getValidTiles(board); // TODO: make bot not be able to choose the positions where their own mines are placed
 	return validTiles[(rand() % validTiles.size())];
 }
@@ -80,11 +80,11 @@ void guess(Board &board, Player &player) {
 	Position guess;
 	int isGuessValid = false; // flag to check if the inputed position is valid. If not, ask the player again
 	while (isGuessValid == false) {
-		std::cout << "Player " << player.id << ", take a guess... " << std::endl;
+		printToPlayer(player, ("Player " + std::to_string(player.id) + ", take a guess... "));
 		guess = getPlayerInput(board, player);
 		isGuessValid = isPositionValid(board, guess);
 		if (isGuessValid == false) {
-			std::cout << "That spot has already been checked! Try again" << std::endl;
+			printToPlayer(player, "That spot has already been checked! Try again");
 		}
 	}
 	// check if the guessed position shares the same position as a mine
@@ -92,11 +92,10 @@ void guess(Board &board, Player &player) {
 	for (Mine const &mine: board.placedMines) {
 		if (mine == guess) {
 			if (mine.owner == player.id) {
-				std::cout << "That's your own mine, silly!" << std::endl; // el jugador pierde la oportunidad de volver a adivinar
+				printToPlayer(player, "That's your own mine, silly!"); // el jugador pierde la oportunidad de volver a adivinar
 			} else {
 				removeMine(board, mine);
-				
-				std::cout << "You found an enemy mine!" << std::endl;
+				printToPlayer(player, "You found an enemy mine!");
 				break;
 			}
 		}
@@ -111,7 +110,6 @@ bool checkMineCollision(Board &board) {
 	bool wasThereCollision = false;
 	std::vector<Mine> conflictingMines;
 	for (int i = 0; i < board.placedMines.size() - 1; i++) { // size is -- because the vector value in i is compared to the other values on his right
-		std::cout << "DEBUG clearing mines... iteration: " << i << " placedMines size: " << board.placedMines.size() << std::endl;
 		Position mine1Pos = board.placedMines[i].position;
 		conflictingMines.push_back(board.placedMines[i]);
 		for (int j = i + 1; j < board.placedMines.size(); j++) {
@@ -128,6 +126,8 @@ bool checkMineCollision(Board &board) {
 				wasThereCollision = true;
 			}
 		}
+		std::cout << "clearing mines" << std::endl;
+
 		conflictingMines.clear();
 	}
 	return wasThereCollision;

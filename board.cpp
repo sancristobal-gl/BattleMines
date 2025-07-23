@@ -52,13 +52,11 @@ std::vector<Position> getValidTiles(Board const &board) {
 void disablePosition(Board &board, Position const &disabledPosition) {
 	Position pos = disabledPosition;
 	board.disabledPositions.insert(pos);
-	std::cout << "DEBUG disabled position (pos)" << std::endl;
 }
 
 void disablePosition(Board &board, Mine const &disabledMine) {
 	Position pos = disabledMine.position;
 	board.disabledPositions.insert(pos);
-	std::cout << "DEBUG disabled position (mine)" << std::endl;
 }
 
 bool removeMine(Board &board, Mine mine) {
@@ -85,13 +83,13 @@ void eliminatePlayers(Board &board) {
 	int newPlayerCount = board.playerCount;
 	std::vector<Player> newPlayerList;
 	for (int i = 0; i < board.playerCount; i++) {
-		if (board.players[i].mineCount <= 0) {
+		if (board.players[i].mineCount <= 0) { // player is removed when they have no mines remaining
 			newPlayerCount--;
 		} else {
 			newPlayerList.push_back(board.players[i]);
 		}
 	}
-	Player *players = new Player[newPlayerCount];
+	Player *players = new Player[newPlayerCount]; // build new player array without the removed players
 	for (int i = 0; i < newPlayerCount; i++) {
 		players[i] = newPlayerList[i];
 	}
