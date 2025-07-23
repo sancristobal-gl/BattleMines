@@ -83,20 +83,14 @@ void disableTilesUsed(Board &board) {
 void eliminatePlayers(Board &board) {
 	int newPlayerCount = board.playerCount;
 	std::vector<Player> newPlayerList;
-	std::cout << "eliminating players " << newPlayerCount << std::endl;
 	for (int i = 0; i < board.playerCount; i++) {
-		std::cout << "player " << i << std::endl;
 		Player player = board.players[i];
 		if (player.mineCount <= 0) { // player is removed when they have no mines remaining
-			std::cout << "removed " << i << std::endl;
 			newPlayerCount--;
 		} else {
-			std::cout << "preserved " << i << std::endl;
 			newPlayerList.push_back(player);
-			std::cout << "pushed to new vector " << i << std::endl;
 		}
 	}
-	std::cout << "creating new player array of size" << newPlayerCount << std::endl;
 	std::vector<Player> players(newPlayerCount); // build new player array without the removed players
 	for (int i = 0; i < newPlayerCount; i++) {
 		players[i] = newPlayerList[i];

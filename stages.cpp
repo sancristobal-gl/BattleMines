@@ -22,16 +22,11 @@ int gameStages::minePlacement(Board &board) {
 		std::cout << "Player " << board.players[p].id << "'s turn to place their mines:" << std::endl;
 		chooseMinePositions(board, board.players[p]);
 	}
-	std::cout << "beforeCheckMineCollission" << std::endl;
 	bool wasThereCollision = checkMineCollision(board); // check if mines collide, if they do, notify the player
 	if (wasThereCollision == true) {
 		waitForInput();
 	}
-	std::cout << "after checkMineCollission" << std::endl;
-
 	eliminatePlayers(board);
-	std::cout << "afterEliminatePlayers" << std::endl;
-
 	return gameEndCondition(board); // every end step, check if a winner has been decided
 }
 
