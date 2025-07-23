@@ -13,15 +13,20 @@ bool Mine::operator==(const Position &b) const {
 }
 
 Board::~Board() {
-	delete[] players;
+	//used to have memory deallocation
+	//preserving just in case
 }
 
 bool isPositionValid(Board const &board, Position const &pos) { // check if pos if withing acceptable values
 	// If the position is outside the board, return false;
-	if ((pos.xpos < 1) || (pos.ypos < 1) || (pos.xpos > board.width) || (pos.ypos > board.height)) return false;
+	if ((pos.xpos < 1) || (pos.ypos < 1) || (pos.xpos > board.width) || (pos.ypos > board.height)) {
+		return false;
+	}
 	// if the position is disabled, return false
-	for (int i = 0; i < board.disabledPositions.size(); i++) {
-		if (pos == board.disabledPositions[i]) return false;
+	for (auto it = board.disabledPositions.begin(); it != board.disabledPositions.end(); it++) {
+		if (pos == *it) {
+			return false;
+		}
 	}
 	// else, return true
 	return true;
@@ -34,13 +39,11 @@ Player getPlayer(Board const &board, int playerID) {
 // mainly for bot logic
 std::vector<Position> getValidTiles(Board const &board) {
 	std::vector<Position> validPositions;
-	for (int x = 1; x <= board.width; x++) {
-		for (int y = 1; y <= board.height; y++) {
-			Position pos;
-			pos.xpos = x;
-			pos.ypos = y;
+	for (unsigned int x = 1; x <= board.width; x++) {
+		for (unsigned int y = 1; y <= board.height; y++) {
+			Position pos{x, y};
 			if (isPositionValid(board, pos)) {
-				validPositions.push_back(pos);
+				validPositions.push_back(std::move(pos));
 			}
 		}
 	}
@@ -48,11 +51,13 @@ std::vector<Position> getValidTiles(Board const &board) {
 }
 
 void disablePosition(Board &board, Position const &disabledPosition) {
-	board.disabledPositions.push_back(disabledPosition);
+	Position pos = disabledPosition;
+	board.disabledPositions.insert(pos);
 }
 
 void disablePosition(Board &board, Mine const &disabledMine) {
-	board.disabledPositions.push_back(disabledMine.position);
+	Position pos = disabledMine.position;
+	board.disabledPositions.insert(pos);
 }
 
 bool removeMine(Board &board, Mine mine) {
@@ -78,18 +83,24 @@ void disableTilesUsed(Board &board) {
 void eliminatePlayers(Board &board) {
 	int newPlayerCount = board.playerCount;
 	std::vector<Player> newPlayerList;
+	std::cout << "eliminating players " << newPlayerCount << std::endl;
 	for (int i = 0; i < board.playerCount; i++) {
-		if (board.players[i].mineCount <= 0) {
+		std::cout << "player " << i << std::endl;
+		Player player = board.players[i];
+		if (player.mineCount <= 0) { // player is removed when they have no mines remaining
+			std::cout << "removed " << i << std::endl;
 			newPlayerCount--;
 		} else {
-			newPlayerList.push_back(board.players[i]);
+			std::cout << "preserved " << i << std::endl;
+			newPlayerList.push_back(player);
+			std::cout << "pushed to new vector " << i << std::endl;
 		}
 	}
-	Player *players = new Player[newPlayerCount];
+	std::cout << "creating new player array of size" << newPlayerCount << std::endl;
+	std::vector<Player> players(newPlayerCount); // build new player array without the removed players
 	for (int i = 0; i < newPlayerCount; i++) {
 		players[i] = newPlayerList[i];
 	}
-	delete[] board.players;
 	board.players = players;
 	board.playerCount = newPlayerCount;
 }
@@ -104,9 +115,13 @@ int gameEndCondition(Board &board) {
 	// check if there are enough tiles to accomodate every player's mines, if not, the game is a draw
 	int maxPlayerMines = 0;
 	for (int i = 0; i < board.playerCount; i++) {
-		if (board.players[i].mineCount < maxPlayerMines) maxPlayerMines = board.players[i].mineCount;
+		if (board.players[i].mineCount > maxPlayerMines) {
+			maxPlayerMines = board.players[i].mineCount;
+		}
 	}
-	if (getValidTiles(board).size() < maxPlayerMines) return 0;
+	int tilesRemaining = getValidTiles(board).size();
+	std::cout << "tiles remaining: " << tilesRemaining << std::endl;
+	if (tilesRemaining < maxPlayerMines) return 0;
 
 	return -1; // else, the game is not over
 }

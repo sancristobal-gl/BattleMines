@@ -1,0 +1,18 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "name": "LLDB Debug",
+            "stopAtEntry": false,
+            "type": "cppdbg",
+            "externalConsole": false,
+            "environment": [],
+            "request": "launch",
+            "program": "C:\\Users\\santiago.cristobal\\Documents\\BattleMines\\BattleMines\\a.exe",
+            "miDebuggerPath": "C:\\Users\\santiago.cristobal\\Downloads\\clang+llvm-20.1.6\bin\\lldb.exe",
+            "MIMode": "lldb"
+        }
+    ]
+}
