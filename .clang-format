@@ -1,0 +1,21 @@
+BasedOnStyle: LLVM
+UseTab: Always
+IndentWidth: 4
+TabWidth: 4
+BreakBeforeBraces: Attach
+BraceWrapping:
+  AfterCaseLabel : false
+  AfterClass : false
+  AfterControlStatement : false
+  AfterEnum: false
+  AfterFunction : false
+  AfterNamespace : false
+  AfterStruct: false
+  SplitEmptyFunction: false
+AllowShortIfStatementsOnASingleLine: true
+IndentCaseLabels: true
+ColumnLimit: 0
+AccessModifierOffset: -4
+NamespaceIndentation: All
+FixNamespaceComments: false
+SpaceBeforeRangeBasedForLoopColon : false
