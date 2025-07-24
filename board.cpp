@@ -105,8 +105,6 @@ void eliminatePlayers(Board &board) {
 }
 // when only one player has mines remaining, they win the game
 // if no players have mines, game is a draw
-// TODO: refactor to support more than 2 players
-// Should make it so that players without mines are eliminated and the other players remain in the game
 int gameEndCondition(Board &board) {
 	if (board.playerCount == 1) return board.players[0].id; // player wins if they're the only one remaining
 	if (board.playerCount == 0) return 0;					// if no players remain, game is a draw
