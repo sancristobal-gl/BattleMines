@@ -79,7 +79,6 @@ void disableTilesUsed(Board &board) {
 	}
 }
 
-// TODO: Refactor when board.players is changed from array to std::vector
 void eliminatePlayers(Board &board) {
 	int newPlayerCount = board.playerCount;
 	std::vector<Player> newPlayerList;
