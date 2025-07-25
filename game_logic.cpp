@@ -120,7 +120,7 @@ bool checkMineCollision(Board &board) {
 		if (conflictingMines.size() > 1) {
 			i--;																																									// i is -- since the current element is to be deleted, meaning the "next" iteration should check the element that will take i's place
 			std::cout << "Colisionaron " << conflictingMines.size() << " minas en " << conflictingMines[0].position.xpos << ", " << conflictingMines[0].position.ypos << std::endl; // conflictingMines will always have a value at [0]
-			for (Mine mine: conflictingMines) {
+			for (Mine const &mine: conflictingMines) {
 				removeMine(board, mine);
 				wasThereCollision = true;
 			}

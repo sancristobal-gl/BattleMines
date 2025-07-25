@@ -10,7 +10,7 @@ void waitForInput() {
 }
 
 void gameStages::roundStart(Board const &board) {
-	for (Player p: board.players) {
+	for (Player const &p: board.players) {
 		std::cout << "Player " << p.id << " mine count: " << p.mineCount << std::endl;
 	}
 	printBoard(board);

@@ -22,10 +22,8 @@ void boardConsoleDisplayHelper::showPositionStatus(Board const &board, unsigned 
 	// print the status of the position {x, y}
 	//(" " = doesn't exist, "O" = valid position with unknown contents, "M" = player mine in position)
 	bool isPositionEnabled = true;
-
-	for (auto it = board.disabledPositions.begin(); it != board.disabledPositions.end(); it++) {
-		Position disabledPos = *it;
-		Position pos = {x, y};
+	Position pos = {x, y};
+	for (Position const &disabledPos: board.disabledPositions) {
 		if (disabledPos == pos) {
 			isPositionEnabled = false;
 			break;
@@ -33,9 +31,9 @@ void boardConsoleDisplayHelper::showPositionStatus(Board const &board, unsigned 
 	}
 	bool mineInPos = false;
 	if (perspective != undefinedPerspective) { // show ony the mines belonging to player
-		for (std::vector<Mine>::const_iterator it = board.placedMines.begin(); it != board.placedMines.end(); it++) {
-			if (it->position.xpos == x && it->position.ypos == y) {
-				if (it->owner == perspective) { // id is player position in array + 1
+		for (Mine const &placedMine: board.placedMines) {
+			if (placedMine.position.xpos == x && placedMine.position.ypos == y) {
+				if (placedMine.owner == perspective) { // id is player position in array + 1
 					mineInPos = true;
 					break;
 				}
