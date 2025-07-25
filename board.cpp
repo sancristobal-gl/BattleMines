@@ -23,7 +23,7 @@ bool isPositionValid(Board const &board, Position const &pos) { // check if pos 
 		return false;
 	}
 	// if the position is disabled, return false
-	for (Position disabledPos : board.disabledPositions) {
+	for (Position const &disabledPos: board.disabledPositions) {
 		if (pos == disabledPos) {
 			return false;
 		}
@@ -32,7 +32,7 @@ bool isPositionValid(Board const &board, Position const &pos) { // check if pos 
 	return true;
 }
 
-int getPlayerPositionInArray(Board const &board, int playerID) { // defined in case the player.ID format changes in the future 
+int getPlayerPositionInArray(Board const &board, int playerID) { // defined in case the player.ID format changes in the future
 	return (playerID - 1);
 }
 // gets all possible valid positions
@@ -74,7 +74,7 @@ bool removeMine(Board &board, Mine mine) {
 
 // function to be called at the end of each turn
 void disableTilesUsed(Board &board) {
-	for (Mine const &placedMine : board.placedMines) {
+	for (Mine const &placedMine: board.placedMines) {
 		disablePosition(board, placedMine);
 	}
 }
@@ -82,7 +82,7 @@ void disableTilesUsed(Board &board) {
 void eliminatePlayers(Board &board) {
 	int newPlayerCount = board.playerCount;
 	std::vector<Player> newPlayerList;
-	for (Player const &player : board.players) {
+	for (Player const &player: board.players) {
 		Player newPlayer = player;
 		if (newPlayer.mineCount <= 0) { // player is removed when they have no mines remaining
 			newPlayerCount--;
@@ -102,11 +102,13 @@ void eliminatePlayers(Board &board) {
 // TODO: refactor to support more than 2 players
 // Should make it so that players without mines are eliminated and the other players remain in the game
 int gameEndCondition(Board &board) {
+	static const int cNoWinner = -1;						// this value represents a state where the game is still going, as there's no winner yet
+	static const int cDraw = 0;								// this value represents a state where the game has ended with no player being a winner
 	if (board.playerCount == 1) return board.players[0].id; // player wins if they're the only one remaining
-	if (board.playerCount == 0) return 0;					// if no players remain, game is a draw
+	if (board.playerCount == 0) return cDraw;				// if no players remain, game is a draw
 	// check if there are enough tiles to accomodate every player's mines, if not, the game is a draw
 	int maxPlayerMines = 0;
-	for (Player const &player : board.players) {
+	for (Player const &player: board.players) {
 		if (player.mineCount > maxPlayerMines) {
 			maxPlayerMines = player.mineCount;
 		}
@@ -115,5 +117,5 @@ int gameEndCondition(Board &board) {
 	std::cout << "tiles remaining: " << tilesRemaining << std::endl;
 	if (tilesRemaining < maxPlayerMines) return 0;
 
-	return -1; // else, the game is not over
+	return cNoWinner; // else, the game is not over
 }
