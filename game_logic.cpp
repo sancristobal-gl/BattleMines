@@ -49,7 +49,7 @@ Position getPlayerInput(Board &board, Player player) {
 void chooseMinePositions(Board &board, Player &player) {
 	printToPlayer(player, "Player " + std::to_string(player.id) + "!, choose your mine's positions");
 	for (int mineId = 0; mineId < player.mineCount; mineId++) {
-		if(!player.isAI) printBoard(board, player.id);
+		if (!player.isAI) printBoard(board, player.id);
 		bool validPlacement = false;
 		Mine mine;
 		while (validPlacement == false) {

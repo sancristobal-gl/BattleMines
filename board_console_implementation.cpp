@@ -15,7 +15,7 @@ namespace boardConsoleDisplayHelper {
 
 void waitForInput() {
 	std::cin.clear();
-	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+	// std::cin.ignore(std::numeric_limits<std::streamsize>::max()); // causes "enter" to have to be pressed twice before proceeding
 	std::cout << "Press enter to continue" << std::endl;
 	std::cin.get();
 	system("cls");

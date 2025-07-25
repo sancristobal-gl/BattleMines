@@ -7,6 +7,13 @@
 #include <utility>
 #include <vector>
 
+void initRand() { // get random seed
+	return srand(time(0));
+}
+
+void initRand(int seed) { // set custom seed for debugging purpouses
+	return srand(seed);
+}
 int gameLoop(Board &board) {
 	/*
 	winner = 0, tie
@@ -30,7 +37,7 @@ int gameLoop(Board &board) {
 
 // TODO: Fix available spaces < mine count soft-block edge case
 int main() {
-	srand(time(0)); // initialize random number generator
+	initRand(); // initialize random number generator
 	Board board = createBoard();
 	int winner = gameLoop(board);
 	if (winner != 0) {
