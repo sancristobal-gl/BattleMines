@@ -13,11 +13,10 @@ namespace boardConsoleDisplayHelper {
 	void printColumnInRow(Board const &board, unsigned int x, unsigned int y, int perspective);
 }
 
-void printToPlayer(Player player, std::string message){ //shows message on console, unless the player is AI, to avoid spammig the console and potentially crashing the program
-	if (!player.isAI){
+void printToPlayer(Player player, std::string message) { // shows message on console, unless the player is AI, to avoid spammig the console and potentially crashing the program
+	if (!player.isAI) {
 		std::cout << message << std::endl;
 	}
-	
 }
 void boardConsoleDisplayHelper::showPositionStatus(Board const &board, unsigned int x, unsigned int y, int perspective) {
 	// print the status of the position {x, y}

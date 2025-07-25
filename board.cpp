@@ -13,8 +13,8 @@ bool Mine::operator==(const Position &b) const {
 }
 
 Board::~Board() {
-	//used to have memory deallocation
-	//preserving just in case
+	// used to have memory deallocation
+	// preserving just in case
 }
 
 bool isPositionValid(Board const &board, Position const &pos) { // check if pos if withing acceptable values
@@ -23,8 +23,8 @@ bool isPositionValid(Board const &board, Position const &pos) { // check if pos 
 		return false;
 	}
 	// if the position is disabled, return false
-	for (auto it = board.disabledPositions.begin(); it != board.disabledPositions.end(); it++) {
-		if (pos == *it) {
+	for (Position disabledPos : board.disabledPositions) {
+		if (pos == disabledPos) {
 			return false;
 		}
 	}
@@ -32,8 +32,8 @@ bool isPositionValid(Board const &board, Position const &pos) { // check if pos 
 	return true;
 }
 
-Player getPlayer(Board const &board, int playerID) {
-	return board.players[playerID - 1];
+int getPlayerPositionInArray(Board const &board, int playerID) { // defined in case the player.ID format changes in the future 
+	return (playerID - 1);
 }
 // gets all possible valid positions
 // mainly for bot logic
@@ -61,10 +61,10 @@ void disablePosition(Board &board, Mine const &disabledMine) {
 }
 
 bool removeMine(Board &board, Mine mine) {
-	for (std::vector<Mine>::iterator it = board.placedMines.begin(); it != board.placedMines.end(); it++) {
+	for (auto it = board.placedMines.begin(); it != board.placedMines.end(); it++) {
 		if (*it == mine) {
 			board.placedMines.erase(it);
-			board.players[mine.owner].mineCount--;
+			board.players[getPlayerPositionInArray(board, mine.owner)].mineCount--;
 			disablePosition(board, mine);
 			return true;
 		}
@@ -74,21 +74,20 @@ bool removeMine(Board &board, Mine mine) {
 
 // function to be called at the end of each turn
 void disableTilesUsed(Board &board) {
-	for (std::vector<Mine>::iterator it = board.placedMines.begin(); it != board.placedMines.end(); it++) {
-		disablePosition(board, *it);
+	for (Mine const &placedMine : board.placedMines) {
+		disablePosition(board, placedMine);
 	}
 }
 
-// TODO: Refactor when board.players is changed from array to std::vector
 void eliminatePlayers(Board &board) {
 	int newPlayerCount = board.playerCount;
 	std::vector<Player> newPlayerList;
-	for (int i = 0; i < board.playerCount; i++) {
-		Player player = board.players[i];
-		if (player.mineCount <= 0) { // player is removed when they have no mines remaining
+	for (Player const &player : board.players) {
+		Player newPlayer = player;
+		if (newPlayer.mineCount <= 0) { // player is removed when they have no mines remaining
 			newPlayerCount--;
 		} else {
-			newPlayerList.push_back(player);
+			newPlayerList.push_back(newPlayer);
 		}
 	}
 	std::vector<Player> players(newPlayerCount); // build new player array without the removed players
@@ -105,12 +104,11 @@ void eliminatePlayers(Board &board) {
 int gameEndCondition(Board &board) {
 	if (board.playerCount == 1) return board.players[0].id; // player wins if they're the only one remaining
 	if (board.playerCount == 0) return 0;					// if no players remain, game is a draw
-
 	// check if there are enough tiles to accomodate every player's mines, if not, the game is a draw
 	int maxPlayerMines = 0;
-	for (int i = 0; i < board.playerCount; i++) {
-		if (board.players[i].mineCount > maxPlayerMines) {
-			maxPlayerMines = board.players[i].mineCount;
+	for (Player const &player : board.players) {
+		if (player.mineCount > maxPlayerMines) {
+			maxPlayerMines = player.mineCount;
 		}
 	}
 	int tilesRemaining = getValidTiles(board).size();

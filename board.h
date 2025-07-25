@@ -15,8 +15,8 @@ struct Position {
 struct PositionHash { // hashing implementation for Position
 	size_t operator()(const Position &pos) const {
 		// debugging;
-		//std::bitset<64> ea(((long long)pos.xpos << 32) ^ (long long)pos.ypos);
-		//std::cout << ea << std::endl;
+		// std::bitset<64> ea(((long long)pos.xpos << 32) ^ (long long)pos.ypos);
+		// std::cout << ea << std::endl;
 		return std::hash<long long>()(((long long)pos.xpos << 32) ^ (long long)pos.ypos); // xpos and ypos are 32bit unsigned integers, we concatenate them into a 64bit long long to create a key
 	}
 };

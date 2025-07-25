@@ -48,20 +48,20 @@ Position getPlayerInput(Board &board, Player player) {
 
 void chooseMinePositions(Board &board, Player &player) {
 	printToPlayer(player, "Player " + std::to_string(player.id) + "!, choose your mine's positions");
-	for (int m = 0; m < player.mineCount; m++) {
+	for (int mineId = 0; mineId < player.mineCount; mineId++) {
 		printBoard(board, player.id);
 		bool validPlacement = false;
 		Mine mine;
 		while (validPlacement == false) {
-			printToPlayer(player, "Choose the position of mine " + std::to_string(m));
+			printToPlayer(player, "Choose the position of mine " + std::to_string(mineId));
 			mine.position = getPlayerInput(board, player);
 			mine.owner = player.id;
 			validPlacement = isPositionValid(board, mine.position);
 			if (validPlacement == false) {
 				printToPlayer(player, "Invalid position! Choose again");
 			}
-			for (std::vector<Mine>::iterator it = board.placedMines.begin(); it != board.placedMines.end(); it++) {
-				if (*it == mine) { // for them to be equal, they need to share position and owner
+			for (Mine const &placedMine: board.placedMines) {
+				if (placedMine == mine) { // for them to be equal, they need to share position and owner
 					printToPlayer(player, "You already placed a mine there! Choose again");
 					validPlacement = false;
 				}
@@ -108,7 +108,7 @@ void guess(Board &board, Player &player) {
 bool checkMineCollision(Board &board) {
 	bool wasThereCollision = false;
 	std::vector<Mine> conflictingMines;
-	for (int i = 0; i < board.placedMines.size() - 1; i++) { // size is -- because the vector value in i is compared to the other values on his right
+	for (int i = 0; i < board.placedMines.size() - 1; i++) { // size is -- because the vector value in i is compared to the values on its right
 		Position mine1Pos = board.placedMines[i].position;
 		conflictingMines.push_back(board.placedMines[i]);
 		for (int j = i + 1; j < board.placedMines.size(); j++) {
