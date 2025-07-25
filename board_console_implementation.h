@@ -1,5 +1,7 @@
 #include "board.h"
 
+void waitForInput();
+
 Board createBoard();
 
 void printToPlayer(Player player, std::string message);

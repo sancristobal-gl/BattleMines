@@ -41,5 +41,4 @@
 *.dwo
 
 # readme
-README.md
 .vscode/tasks.json

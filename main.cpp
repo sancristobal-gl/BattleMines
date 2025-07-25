@@ -26,7 +26,6 @@ int gameLoop(Board &board) {
 		if (winner != -1) return winner;
 	}
 	return winner;
-	return 0;
 }
 
 // TODO: Fix available spaces < mine count soft-block edge case
