@@ -49,7 +49,7 @@ Position getPlayerInput(Board &board, Player player) {
 void chooseMinePositions(Board &board, Player &player) {
 	printToPlayer(player, "Player " + std::to_string(player.id) + "!, choose your mine's positions");
 	for (int mineId = 0; mineId < player.mineCount; mineId++) {
-		printBoard(board, player.id);
+		if(!player.isAI) printBoard(board, player.id);
 		bool validPlacement = false;
 		Mine mine;
 		while (validPlacement == false) {
@@ -69,9 +69,8 @@ void chooseMinePositions(Board &board, Player &player) {
 		}
 		// std::cout << "Player " << mine.owner+1 <<  " placed mine at " << mine.xpos << ", " << mine.ypos << std::endl; //for testing purposes, TODO: remove before main release
 		board.placedMines.push_back(mine);
-		std::cout << std::endl;
-		system("cls");
 	}
+	waitForInput();
 }
 
 void guess(Board &board, Player &player) {
@@ -100,7 +99,6 @@ void guess(Board &board, Player &player) {
 		}
 	}
 	disablePosition(board, guess);
-	return;
 }
 
 // function to be called after each player has placed their mines

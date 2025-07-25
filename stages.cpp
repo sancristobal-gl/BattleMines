@@ -1,14 +1,5 @@
 #include "stages.h"
 
-void waitForInput() {
-	std::cin.clear();
-	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-	std::cout << "Press enter to continue" << std::endl;
-	std::cin.get();
-	system("cls");
-	return;
-}
-
 void gameStages::roundStart(Board const &board) {
 	for (Player const &p: board.players) {
 		std::cout << "Player " << p.id << " mine count: " << p.mineCount << std::endl;
