@@ -17,11 +17,7 @@ Board createBoard() {
 		Player player;
 		player.mineCount = mineCount;
 		player.id = p + 1;
-		if (board.gameType == PVE) {
-			if (p > 0) {
-				player.isAI = true;
-			}
-		}
+		player.isAI = ((board.gameType == PVE) && (p > 0)); // if game is PVE and the player is not the first one, they're a bot (TODO: make the user able to choose which players will be human and which will be bos)
 		board.players.push_back(player);
 	}
 	return board;
