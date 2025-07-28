@@ -43,7 +43,8 @@ struct Player {
 
 enum gameType {
 	PVP,
-	PVE
+	PVE,
+	EVE
 };
 
 struct Board {

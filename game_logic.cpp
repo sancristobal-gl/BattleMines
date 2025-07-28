@@ -8,7 +8,7 @@ Board createBoard() {
 	int width = 0;
 	int height = 0;
 	int mineCount = 0;
-	board.gameType = static_cast<gameType>(getValuesWithinRange("choose game mode (0=PVP, 1=PVE)", 0, 1)); // not sure if this is good practice
+	board.gameType = static_cast<gameType>(getValuesWithinRange("choose game mode (0=PVP, 1=PVE, 2=EVE)", 0, 2)); // not sure if this is good practice
 	board.width = getValuesWithinRange("choose the width of the field", 5, 10);
 	board.height = getValuesWithinRange("choose the height of the field", 5, 10);
 	mineCount = getValuesWithinRange("choose the number of mines on the field", 3, 8);
@@ -17,18 +17,27 @@ Board createBoard() {
 		Player player;
 		player.mineCount = mineCount;
 		player.id = p + 1;
-		player.isAI = ((board.gameType == PVE) && (p > 0)); // if game is PVE and the player is not the first one, they're a bot (TODO: make the user able to choose which players will be human and which will be bos)
+		if (board.gameType == PVE) { // if game is PVE and the player is not the first one, they're a bot (TODO: make the user able to choose which players will be human and which will be bot)
+			if (p > 0) {
+				player.isAI = true;
+			}
+		} else if (board.gameType == EVE) { // in EVE, all players are bots
+			player.isAI = true;
+		}
 		board.players.push_back(player);
+	}
+	if (board.gameType == EVE){
+		setAwaitUserInput(false);
 	}
 	return board;
 }
 
-Position getRandomValidPosition(Board &board, Player player) { // helper function for bot players
+Position getRandomValidPosition(Board const &board, Player player) { // helper function for bot players
 	// player parameter is currently unused, but it will be used in the future
 	std::vector<Position> validTiles = getValidTiles(board); // TODO: make bot not be able to choose the positions where their own mines are placed
 	return validTiles[(rand() % validTiles.size())];
 }
-Position getPlayerInput(Board &board, Player player) {
+Position getPlayerInput(Board const &board, Player player) {
 	Position pos;
 	if (player.isAI == false) {
 		std::cout << "x: ";
