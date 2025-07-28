@@ -55,6 +55,7 @@
         "xutility": "cpp",
         "unordered_set": "cpp",
         "bitset": "cpp",
-        "functional": "cpp"
+        "functional": "cpp",
+        "fstream": "cpp"
     }
 }

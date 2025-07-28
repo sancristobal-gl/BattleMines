@@ -6,6 +6,7 @@
 #include <unordered_map>
 #include <utility>
 #include <vector>
+#include <fstream> //for logging to file
 
 int initRand() { // get random seed
 	int seed = time(0);
@@ -13,8 +14,9 @@ int initRand() { // get random seed
 	return seed;
 }
 
-void initRand(int seed) { // set custom seed for debugging purpouses
-	return srand(seed);
+int initRand(int seed) { // set custom seed for debugging purpouses
+	srand(seed);
+	return seed;
 }
 int gameLoop(Board &board) {
 	/*
@@ -39,8 +41,11 @@ int gameLoop(Board &board) {
 
 // TODO: Fix available spaces < mine count soft-block edge case
 int main() {
-	std::cout << "seed: " << initRand() << std::endl; // initialize random number generator
-	Board board = createBoard();
+	std::ofstream log("seed.txt");
+	log << initRand();
+	log.close();
+	Board board = createBoard(2, 10, 10, 8, 8);
+	//Board board = createBoard();
 	int winner = gameLoop(board);
 	if (winner != 0) {
 		std::cout << "The winner is: player " << winner << "! Congratulations!" << std::endl;

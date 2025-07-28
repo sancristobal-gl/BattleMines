@@ -32,6 +32,31 @@ Board createBoard() {
 	return board;
 }
 
+Board createBoard(int gameTypeValue, int width, int height, int mineCount, int playerCount) { // for debugging purpouses
+	Board board;
+	board.gameType = static_cast<gameType>(gameTypeValue);
+	board.width = width;
+	board.height = height;
+	board.playerCount = playerCount;
+	for (int p = 0; p < board.playerCount; p++) {
+		Player player;
+		player.mineCount = mineCount;
+		player.id = p + 1;
+		if (board.gameType == PVE) { // if game is PVE and the player is not the first one, they're a bot (TODO: make the user able to choose which players will be human and which will be bot)
+			if (p > 0) {
+				player.isAI = true;
+			}
+		} else if (board.gameType == EVE) { // in EVE, all players are bots
+			player.isAI = true;
+		}
+		board.players.push_back(player);
+	}
+	if (board.gameType == EVE) {
+		setAwaitUserInput(false);
+	}
+	return board;
+}
+
 Position getRandomValidPosition(Board const &board, Player player) { // helper function for bot players
 	// player parameter is currently unused, but it will be used in the future
 	std::vector<Position> validTiles = getValidTiles(board); // TODO: make bot not be able to choose the positions where their own mines are placed
@@ -80,11 +105,12 @@ void chooseMinePositions(Board &board, Player &player) {
 
 void guess(Board &board, Player &player) {
 	printBoard(board, player.id);
+	
 	Position guess;
 	int isGuessValid = false; // flag to check if the inputed position is valid. If not, ask the player again
 	while (isGuessValid == false) {
 		printToPlayer(player, ("Player " + std::to_string(player.id) + ", take a guess... "));
-		guess = getPlayerInput(board, player);
+		guess = getPlayerInput(board, player); //aca ta el problema
 		isGuessValid = isPositionValid(board, guess);
 		if (isGuessValid == false) {
 			printToPlayer(player, "That spot has already been checked! Try again");
