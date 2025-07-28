@@ -26,7 +26,7 @@ Board createBoard() {
 		}
 		board.players.push_back(player);
 	}
-	if (board.gameType == EVE){
+	if (board.gameType == EVE) {
 		setAwaitUserInput(false);
 	}
 	return board;
@@ -112,6 +112,9 @@ bool checkMineCollision(Board &board) {
 	bool wasThereCollision = false;
 	std::vector<Mine> conflictingMines;
 	for (int i = 0; i < board.placedMines.size() - 1; i++) { // size is -- because the vector value in i is compared to the values on its right
+		if (board.placedMines.size() <= 0) {
+			return wasThereCollision;
+		}
 		Position mine1Pos = board.placedMines[i].position;
 		conflictingMines.push_back(board.placedMines[i]);
 		for (int j = i + 1; j < board.placedMines.size(); j++) {
