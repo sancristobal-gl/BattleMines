@@ -44,7 +44,7 @@ int main() {
 	std::ofstream log("seed.txt");
 	log << initRand();
 	log.close();
-	Board board = createBoard(2, 10, 10, 8, 8);
+	Board board = createBoard();
 	//Board board = createBoard();
 	int winner = gameLoop(board);
 	if (winner != 0) {
