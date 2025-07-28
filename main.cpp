@@ -7,8 +7,10 @@
 #include <utility>
 #include <vector>
 
-void initRand() { // get random seed
-	return srand(time(0));
+int initRand() { // get random seed
+	int seed = time(0);
+	srand(seed);
+	return seed;
 }
 
 void initRand(int seed) { // set custom seed for debugging purpouses
@@ -37,7 +39,7 @@ int gameLoop(Board &board) {
 
 // TODO: Fix available spaces < mine count soft-block edge case
 int main() {
-	initRand(); // initialize random number generator
+	std::cout << "seed: " << initRand() << std::endl; // initialize random number generator
 	Board board = createBoard();
 	int winner = gameLoop(board);
 	if (winner != 0) {
