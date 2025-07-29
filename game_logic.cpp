@@ -57,10 +57,14 @@ Board createBoard(int gameTypeValue, int width, int height, int mineCount, int p
 	return board;
 }
 
+int getRandomValueInRange(int max, int min = 0) {
+	return (rand() % (max - min) + min);
+}
+
 Position getRandomValidPosition(Board const &board, Player player) { // helper function for bot players
 	// player parameter is currently unused, but it will be used in the future
 	std::vector<Position> validTiles = getValidTiles(board); // TODO: make bot not be able to choose the positions where their own mines are placed
-	return validTiles[(rand() % validTiles.size())];
+	return validTiles[getRandomValueInRange(validTiles.size())];
 }
 Position getPlayerInput(Board const &board, Player player) {
 	Position pos;
@@ -79,7 +83,9 @@ Position getPlayerInput(Board const &board, Player player) {
 void chooseMinePositions(Board &board, Player &player) {
 	printToPlayer(player, std::string("Player ") + std::to_string(player.id) + std::string("!, choose your mine's positions"));
 	for (int mineId = 0; mineId < player.mineCount; mineId++) {
-		if (!player.isAI) printBoard(board, player.id);
+		if (!player.isAI) {
+			printBoard(board, player.id);
+		}
 		bool validPlacement = false;
 		Mine mine;
 		while (validPlacement == false) {
@@ -105,12 +111,12 @@ void chooseMinePositions(Board &board, Player &player) {
 
 void guess(Board &board, Player &player) {
 	printBoard(board, player.id);
-	
+
 	Position guess;
 	int isGuessValid = false; // flag to check if the inputed position is valid. If not, ask the player again
 	while (isGuessValid == false) {
 		printToPlayer(player, (std::string("Player ") + std::to_string(player.id) + std::string(", take a guess... ")));
-		guess = getPlayerInput(board, player); //aca ta el problema
+		guess = getPlayerInput(board, player); // aca ta el problema
 		isGuessValid = isPositionValid(board, guess);
 		if (isGuessValid == false) {
 			printToPlayer(player, "That spot has already been checked! Try again");
@@ -150,7 +156,7 @@ bool checkMineCollision(Board &board) {
 			}
 		}
 		if (conflictingMines.size() > 1) {
-			i--;																																									// i is -- since the current element is to be deleted, meaning the "next" iteration should check the element that will take i's place
+			i--;																																																		   // i is -- since the current element is to be deleted, meaning the "next" iteration should check the element that will take i's place
 			std::cout << std::string("Colisionaron ") << conflictingMines.size() << std::string(" minas en ") << conflictingMines[0].position.xpos << std::string(", ") << conflictingMines[0].position.ypos << std::endl; // conflictingMines will always have a value at [0]
 			for (Mine const &mine: conflictingMines) {
 				removeMine(board, mine);
