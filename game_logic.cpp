@@ -111,12 +111,11 @@ void chooseMinePositions(Board &board, Player &player) {
 
 void guess(Board &board, Player &player) {
 	printBoard(board, player.id);
-
 	Position guess;
 	int isGuessValid = false; // flag to check if the inputed position is valid. If not, ask the player again
 	while (isGuessValid == false) {
 		printToPlayer(player, (std::string("Player ") + std::to_string(player.id) + std::string(", take a guess... ")));
-		guess = getPlayerInput(board, player); // aca ta el problema
+		guess = getPlayerInput(board, player);
 		isGuessValid = isPositionValid(board, guess);
 		if (isGuessValid == false) {
 			printToPlayer(player, "That spot has already been checked! Try again");
