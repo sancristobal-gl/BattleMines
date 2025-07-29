@@ -42,3 +42,6 @@
 
 # readme
 .vscode/tasks.json
+
+# seed log
+seed.txt
