@@ -33,7 +33,11 @@ bool isPositionValid(Board const &board, Position const &pos) { // check if pos 
 }
 
 int getPlayerPositionInArray(Board const &board, int playerID) { // defined in case the player.ID format changes in the future
-	return (playerID - 1);
+	if (playerID > 0) {
+		return (playerID - 1);
+	} else {
+		return -1;
+	}
 }
 // gets all possible valid positions
 // mainly for bot logic
