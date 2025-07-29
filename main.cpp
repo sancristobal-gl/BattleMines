@@ -45,7 +45,6 @@ int main() {
 	log << initRand();
 	log.close();
 	Board board = createBoard();
-	//Board board = createBoard();
 	int winner = gameLoop(board);
 	if (winner != 0) {
 		std::cout << "The winner is: player " << winner << "! Congratulations!" << std::endl;
