@@ -26,12 +26,6 @@ Board createBoard() {
 		}
 		board.players.push_back(player);
 	}
-	if (board.gameType == EVE) {
-		setAwaitUserInput(false);
-	}
-	else{
-		setAwaitUserInput(true);
-	}
 	return board;
 }
 
@@ -54,33 +48,7 @@ Board createBoard(int gameTypeValue, int width, int height, int mineCount, int p
 		}
 		board.players.push_back(player);
 	}
-	if (board.gameType == EVE) {
-		setAwaitUserInput(false);
-	}
 	return board;
-}
-
-int getRandomValueInRange(int max, int min = 0) {
-	return (rand() % (max - min) + min);
-}
-
-Position getRandomValidPosition(Board const &board, Player player) { // helper function for bot players
-	// player parameter is currently unused, but it will be used in the future
-	std::vector<Position> validTiles = getValidTiles(board); // TODO: make bot not be able to choose the positions where their own mines are placed
-	return validTiles[getRandomValueInRange(validTiles.size())];
-}
-Position getPlayerInput(Board const &board, Player player) {
-	Position pos;
-	if (player.isAI == false) {
-		std::cout << "x: ";
-		std::cin >> pos.xpos;
-		std::cout << "y: ";
-		std::cin >> pos.ypos;
-	} else {
-		pos = getRandomValidPosition(board, player);
-		std::cout << std::endl;
-	}
-	return pos;
 }
 
 void chooseMinePositions(Board &board, Player &player) {
@@ -109,7 +77,7 @@ void chooseMinePositions(Board &board, Player &player) {
 		// std::cout << "Player " << mine.owner+1 <<  " placed mine at " << mine.xpos << ", " << mine.ypos << std::endl; //for testing purposes, TODO: remove before main release
 		board.placedMines.push_back(mine);
 	}
-	getUserInput();
+	awaitUserInput(board.gameType);
 }
 
 void guess(Board &board, Player &player) {

@@ -1,11 +1,11 @@
 #include "board.h"
 #include <functional>
 
-void setAwaitUserInput(bool value);
-
-void getUserInput();
+void awaitUserInput(gameType gameType);
 
 Board createBoard();
+
+Position getPlayerInput(Board const &board, Player player);
 
 void printToPlayer(Player player, std::string message);
 
