@@ -1,44 +1,31 @@
 #include "stages.h"
 
-void waitForInput() {
-	std::cin.clear();
-	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-	std::cout << "Press enter to continue" << std::endl;
-	std::cin.get();
-	system("cls");
-	return;
-}
-
 void gameStages::roundStart(Board const &board) {
-	for (int p = 0; p < board.playerCount; p++) {
-		std::cout << "Player " << board.players[p].id << " mine count: " << board.players[p].mineCount << std::endl;
+	for (Player const &p: board.players) {
+		std::cout << "Player " << p.id << " mine count: " << p.mineCount << std::endl;
 	}
 	printBoard(board);
 	std::cout << "Press enter to commence the round!" << std::endl;
+	waitForInput();
 }
 
 int gameStages::minePlacement(Board &board) {
-	for (int p = 0; p < board.playerCount; p++) {
-		std::cout << "Player " << board.players[p].id << "'s turn to place their mines:" << std::endl;
-		chooseMinePositions(board, board.players[p]);
+	for (Player &p: board.players) {
+		std::cout << "Player " << p.id << "'s turn to place their mines:" << std::endl;
+		chooseMinePositions(board, p);
 	}
-	std::cout << "beforeCheckMineCollission" << std::endl;
 	bool wasThereCollision = checkMineCollision(board); // check if mines collide, if they do, notify the player
 	if (wasThereCollision == true) {
 		waitForInput();
 	}
-	std::cout << "after checkMineCollission" << std::endl;
-
 	eliminatePlayers(board);
-	std::cout << "afterEliminatePlayers" << std::endl;
-
 	return gameEndCondition(board); // every end step, check if a winner has been decided
 }
 
 int gameStages::guessing(Board &board) {
-	for (int p = 0; p < board.playerCount; p++) {
-		std::cout << "Player " << board.players[p].id << "'s turn to guess:" << std::endl;
-		guess(board, board.players[p]);
+	for (Player &p: board.players) {
+		std::cout << "Player " << p.id << "'s turn to guess:" << std::endl;
+		guess(board, p);
 		waitForInput();
 	}
 	eliminatePlayers(board);

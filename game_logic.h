@@ -1,4 +1,4 @@
-#include "board_console_implementation.h"
+#include "board_console.h"
 #include <cstdlib>
 #include <ctime>
 #include <iostream>
@@ -7,7 +7,11 @@
 #include <utility>
 #include <vector>
 
-std::string getPlayerInput(Board &board, Player player, int askCoordinate);
+Board createBoard();
+
+Board createBoard(int gameType, int width, int height, int mineCount, int playerCount);
+
+Position getPlayerInput(Board const &board, Player player);
 
 void chooseMinePositions(Board &board, Player &player);
 
