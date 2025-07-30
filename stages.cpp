@@ -6,7 +6,7 @@ void gameStages::roundStart(Board const &board) {
 	}
 	printBoard(board);
 	std::cout << "Press enter to commence the round!" << std::endl;
-	waitForInput();
+	getUserInput();
 }
 
 int gameStages::minePlacement(Board &board) {
@@ -16,7 +16,7 @@ int gameStages::minePlacement(Board &board) {
 	}
 	bool wasThereCollision = checkMineCollision(board); // check if mines collide, if they do, notify the player
 	if (wasThereCollision == true) {
-		waitForInput();
+		getUserInput();
 	}
 	eliminatePlayers(board);
 	return gameEndCondition(board); // every end step, check if a winner has been decided
@@ -33,7 +33,7 @@ int gameStages::guessing(Board &board) {
 		printToPlayer(p, std::string("You've got ") + std::to_string(p.id) + std::string(" guesses"));
 		for (int i = 0; i < getGuessAmount(board.playerCount); i++) {
 			guess(board, p);
-			waitForInput();
+			getUserInput();
 			eliminatePlayers(board);
 			int winner = gameEndCondition(board);
 			if (winner != -1) {

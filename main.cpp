@@ -44,11 +44,11 @@ int main() {
 	std::ofstream log("seed.txt");
 	log << initRand();
 	log.close();
-	#ifdef QUICKSIM
+#ifdef QUICKSIM
 	Board board = createBoard(2, 10, 10, 3, 8);
-	#else
+#else
 	Board board = createBoard();
-	#endif
+#endif
 	int winner = gameLoop(board);
 	if (winner != 0) {
 		std::cout << "The winner is: player " << winner << "! Congratulations!" << std::endl;

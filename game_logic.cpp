@@ -29,6 +29,9 @@ Board createBoard() {
 	if (board.gameType == EVE) {
 		setAwaitUserInput(false);
 	}
+	else{
+		setAwaitUserInput(true);
+	}
 	return board;
 }
 
@@ -106,7 +109,7 @@ void chooseMinePositions(Board &board, Player &player) {
 		// std::cout << "Player " << mine.owner+1 <<  " placed mine at " << mine.xpos << ", " << mine.ypos << std::endl; //for testing purposes, TODO: remove before main release
 		board.placedMines.push_back(mine);
 	}
-	waitForInput();
+	getUserInput();
 }
 
 void guess(Board &board, Player &player) {

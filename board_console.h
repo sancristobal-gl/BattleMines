@@ -1,9 +1,9 @@
 #include "board.h"
-#include "functional"
-
-void waitForInput();
+#include <functional>
 
 void setAwaitUserInput(bool value);
+
+void getUserInput();
 
 Board createBoard();
 
