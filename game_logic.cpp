@@ -61,12 +61,24 @@ int getRandomValueInRange(int max, int min = 0) {
 	return (rand() % (max - min) + min);
 }
 
-Position getRandomValidPosition(Board const &board, Player player) { // helper function for bot players
+Position getRandomValidPosition(Board const &board, Player const &player) { // helper function for bot players
 	// player parameter is currently unused, but it will be used in the future
-	std::vector<Position> validTiles = getValidTiles(board); // TODO: make bot not be able to choose the positions where their own mines are placed
+	std::vector<Position> validTiles = getValidTiles(board);
+	/* doesn't work because player.mines is a dynamic array
+	so we can't know it's size
+	for (auto it = validTiles.begin(); it != validTiles.end(); it++) { // make bot not able to choose positions where one of their mines is placed
+		std::cout << "u";
+		for (int i = 0; i < player.mineCount; i++) {				   // player mine array is not iteratable
+			std::cout << "a";
+			if (player.mines[i].position == *it) {
+				std::cout << "i" << std::endl;
+				validTiles.erase(it);
+			}
+		}
+	}*/
 	return validTiles[getRandomValueInRange(validTiles.size())];
 }
-Position getPlayerInput(Board const &board, Player player) {
+Position getPlayerInput(Board const &board, Player const &player) {
 	Position pos;
 	if (player.isAI == false) {
 		std::cout << "x: ";
