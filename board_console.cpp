@@ -5,6 +5,7 @@ const int undefinedPerspective = -1; // perspective represent the player who the
 
 const int charsPerLabel = 3;
 
+
 namespace boardConsoleDisplayHelper {
 	void showPositionStatus(Board const &board, unsigned int x, unsigned int y, int perspective = undefinedPerspective);
 
@@ -13,7 +14,7 @@ namespace boardConsoleDisplayHelper {
 	void printColumnInRow(Board const &board, unsigned int x, unsigned int y, int perspective);
 }
 
-std::function<void()> waitUserInput;
+
 
 
 void awaitUserInput() {
@@ -42,6 +43,7 @@ void setAwaitUserInput(bool value) {
 }
 
 void getUserInput(){
+	static std::function<void()> waitUserInput;
 	waitUserInput();
 }
 

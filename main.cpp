@@ -45,7 +45,7 @@ int main() {
 	log << initRand();
 	log.close();
 #ifdef QUICKSIM
-	Board board = createBoard(2, 10, 10, 3, 8);
+	Board board = createBoard(2, 20, 20, 3, 8);
 #else
 	Board board = createBoard();
 #endif
