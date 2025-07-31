@@ -34,7 +34,6 @@ int gameLoop(Board &board) {
 	}
 	return winner;
 }
-// broken seed 1753799318
 //  TODO: Fix available spaces < mine count soft-block edge case
 int main() {
 #ifdef LOG
