@@ -17,13 +17,7 @@ Board createBoard() {
 		Player player;
 		player.mineCount = mineCount;
 		player.id = p + 1;
-		if (board.gameType == PVE) { // if game is PVE and the player is not the first one, they're a bot (TODO: make the user able to choose which players will be human and which will be bot)
-			if (p > 0) {
-				player.isAI = true;
-			}
-		} else if (board.gameType == EVE) { // in EVE, all players are bots
-			player.isAI = true;
-		}
+		player.isAI = ((board.gameType == PVE) && (p > 0)) || (board.gameType == EVE);
 		board.players.push_back(player);
 	}
 	if (board.gameType == EVE) {
@@ -32,7 +26,7 @@ Board createBoard() {
 	return board;
 }
 
-Board createBoard(int gameTypeValue, int width, int height, int mineCount, int playerCount) { // for debugging purpouses
+Board createBoard(int gameTypeValue, int width, int height, int mineCount, int playerCount) { // overloaded instead of merging into one function because once requires player input and the other doesn't
 	Board board;
 	board.gameType = static_cast<gameType>(gameTypeValue);
 	board.width = width;
@@ -42,13 +36,7 @@ Board createBoard(int gameTypeValue, int width, int height, int mineCount, int p
 		Player player;
 		player.mineCount = mineCount;
 		player.id = p + 1;
-		if (board.gameType == PVE) { // if game is PVE and the player is not the first one, they're a bot (TODO: make the user able to choose which players will be human and which will be bot)
-			if (p > 0) {
-				player.isAI = true;
-			}
-		} else if (board.gameType == EVE) { // in EVE, all players are bots
-			player.isAI = true;
-		}
+		player.isAI = ((board.gameType == PVE) && (p > 0)) || (board.gameType == EVE);
 		board.players.push_back(player);
 	}
 	if (board.gameType == EVE) {
@@ -154,13 +142,13 @@ void guess(Board &board, Player &player) {
 bool checkMineCollision(Board &board) {
 	bool wasThereCollision = false;
 	std::vector<Mine> conflictingMines;
-	for (int i = 0; i < board.placedMines.size() - 1; i++) { // size is -- because the vector value in i is compared to the values on its right
+	for (unsigned int i = 0; i < board.placedMines.size() - 1; i++) { // size is -- because the vector value in i is compared to the values on its right
 		if (board.placedMines.size() <= 0) {
 			return wasThereCollision;
 		}
 		Position mine1Pos = board.placedMines[i].position;
 		conflictingMines.push_back(board.placedMines[i]);
-		for (int j = i + 1; j < board.placedMines.size(); j++) {
+		for (unsigned int j = i + 1; j < board.placedMines.size(); j++) {
 			Position mine2Pos = board.placedMines[j].position;
 			if (mine1Pos.xpos == mine2Pos.xpos && mine1Pos.ypos == mine2Pos.ypos) { // they'll be equal if they share the same positoon, the owner is not a factor
 				conflictingMines.push_back(board.placedMines[j]);
