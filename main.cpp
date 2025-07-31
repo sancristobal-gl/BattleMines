@@ -34,7 +34,10 @@ int gameLoop(Board &board) {
 	}
 	return winner;
 }
+<<<<<<< HEAD
 //  TODO: Fix available spaces < mine count soft-block edge case
+=======
+>>>>>>> 30d3d92206930a0db28b891f3757077bcec6f80c
 int main() {
 #ifdef LOG
 	std::ofstream log("seed.txt");
