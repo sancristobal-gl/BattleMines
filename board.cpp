@@ -54,6 +54,16 @@ std::vector<Position> getValidTiles(Board const &board) {
 	return validPositions;
 }
 
+std::vector<Mine> getPlayerMines(Board const &board, Player const &player) {
+	std::vector<Mine> ret;
+	for (Mine mine: board.placedMines) {
+		if (mine.owner == player.id) {
+			ret.push_back(mine);
+		}
+	}
+	return ret;
+}
+
 void disablePosition(Board &board, Position const &disabledPosition) {
 	Position pos = disabledPosition;
 	board.disabledPositions.insert(pos);
