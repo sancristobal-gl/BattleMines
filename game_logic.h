@@ -11,7 +11,7 @@ Board createBoard();
 
 Board createBoard(int gameType, int width, int height, int mineCount, int playerCount);
 
-Position getPlayerInput(Board const &board, Player player);
+Position getPlayerInput(Board const &board, Player const &player);
 
 void chooseMinePositions(Board &board, Player &player);
 

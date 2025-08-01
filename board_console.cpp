@@ -5,7 +5,7 @@ const int undefinedPerspective = -1; // perspective represent the player who the
 
 const int charsPerLabel = 3;
 
-static bool awaitUserInput = true; //used to continously simulate a match when all players are bots
+static bool awaitUserInput = true; // used to continously simulate a match when all players are bots
 
 namespace boardConsoleDisplayHelper {
 	void showPositionStatus(Board const &board, unsigned int x, unsigned int y, int perspective = undefinedPerspective);
@@ -19,18 +19,18 @@ void waitForInput() {
 	std::cin.clear();
 	// std::cin.ignore(std::numeric_limits<std::streamsize>::max()); // causes "enter" to have to be pressed twice before proceeding
 	std::cout << "Press enter to continue" << std::endl;
-	if(awaitUserInput){
+	if (awaitUserInput) {
 		std::cin.get();
 	}
 	system("cls");
 	return;
 }
 
-void setAwaitUserInput(bool value){
+void setAwaitUserInput(bool value) {
 	awaitUserInput = value;
 }
 
-void printToPlayer(Player player, std::string message) { // shows message on console, unless the player is AI, to avoid spammig the console and potentially crashing the program
+void printToPlayer(Player const &player, std::string const &message) { // shows message on console, unless the player is AI, to avoid spammig the console and potentially crashing the program
 	if (!player.isAI) {
 		std::cout << message << std::endl;
 	}

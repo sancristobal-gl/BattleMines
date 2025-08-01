@@ -22,11 +22,24 @@ int gameStages::minePlacement(Board &board) {
 	return gameEndCondition(board); // every end step, check if a winner has been decided
 }
 
+unsigned int getGuessAmount(unsigned int playerCount) { // players have guesses depending on the number of players
+	// should change this function if support for more players and game rules are implemented
+	return ceil(log2(playerCount)); // currently, players<=2 have 1 guess, <=4 have 2 guesses, 8<= have 3
+}
+
 int gameStages::guessing(Board &board) {
 	for (Player &p: board.players) {
-		std::cout << "Player " << p.id << "'s turn to guess:" << std::endl;
-		guess(board, p);
-		waitForInput();
+		printToPlayer(p, std::string("Player ") + std::to_string(p.id) + std::string("'s turn to guess:"));
+		printToPlayer(p, std::string("You've got ") + std::to_string(p.id) + std::string(" guesses"));
+		for (int i = 0; i < getGuessAmount(board.playerCount); i++) {
+			guess(board, p);
+			waitForInput();
+			eliminatePlayers(board);
+			int winner = gameEndCondition(board);
+			if (winner != -1) {
+				return winner;
+			}
+		}
 	}
 	eliminatePlayers(board);
 	return gameEndCondition(board);

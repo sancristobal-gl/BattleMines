@@ -1,20 +1,16 @@
 #include "stages.h"
 #include <cstdlib>
 #include <ctime>
+#include <fstream>
 #include <iostream>
+#include <optional>
 #include <string>
 #include <unordered_map>
 #include <utility>
 #include <vector>
-#include <fstream> //for logging to file
 
-int initRand() { // get random seed
-	int seed = time(0);
-	srand(seed);
-	return seed;
-}
-
-int initRand(int seed) { // set custom seed for debugging purpouses
+unsigned int initRand(std::optional<unsigned int> customSeed = std::nullopt) { // initialize randomizer with either random or custom seed
+	unsigned int seed = customSeed.value_or(time(0));
 	srand(seed);
 	return seed;
 }
@@ -38,14 +34,17 @@ int gameLoop(Board &board) {
 	}
 	return winner;
 }
-
-// TODO: Fix available spaces < mine count soft-block edge case
 int main() {
+#ifdef LOG
 	std::ofstream log("seed.txt");
 	log << initRand();
 	log.close();
+#endif
+#ifdef QUICKSIM
+	Board board = createBoard(2, 10, 10, 3, 8);
+#else
 	Board board = createBoard();
-	//Board board = createBoard();
+#endif
 	int winner = gameLoop(board);
 	if (winner != 0) {
 		std::cout << "The winner is: player " << winner << "! Congratulations!" << std::endl;
