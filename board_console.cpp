@@ -47,7 +47,7 @@ Position getPlayerInput(Board const &board, Player player) {
 	return pos;
 }
 
-void printToPlayer(Player player, std::string message) { // shows message on console, unless the player is AI, to avoid spammig the console and potentially crashing the program
+void printToPlayer(Player const &player, std::string const &message) { // shows message on console, unless the player is AI, to avoid spammig the console and potentially crashing the program
 	if (!player.isAI) {
 		std::cout << message << std::endl;
 	}

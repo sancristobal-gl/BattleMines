@@ -54,6 +54,16 @@ std::vector<Position> getValidTiles(Board const &board) {
 	return validPositions;
 }
 
+std::vector<Mine> getPlayerMines(Board const &board, Player const &player) {
+	std::vector<Mine> ret;
+	for (Mine mine: board.placedMines) {
+		if (mine.owner == player.id) {
+			ret.push_back(mine);
+		}
+	}
+	return ret;
+}
+
 void disablePosition(Board &board, Position const &disabledPosition) {
 	Position pos = disabledPosition;
 	board.disabledPositions.insert(pos);
@@ -117,9 +127,22 @@ int gameEndCondition(Board &board) {
 			maxPlayerMines = player.mineCount;
 		}
 	}
-	int tilesRemaining = getValidTiles(board).size();
+	unsigned int tilesRemaining = getValidTiles(board).size();
 	std::cout << "tiles remaining: " << tilesRemaining << std::endl;
-	if ((tilesRemaining < maxPlayerMines) || (getValidTiles(board).size() < board.playerCount)) return 0;
-
+	if ((tilesRemaining < maxPlayerMines) || (getValidTiles(board).size() < board.playerCount)) { // if not enough tiles remain for another turn, the player with the most mines remaining wins
+		Player playerWithMaxMines;
+		int winner = 0;
+		for (Player player: board.players) {
+			if (player.mineCount > playerWithMaxMines.mineCount) {
+				playerWithMaxMines = player;
+				winner = player.id;
+			} else if (player.mineCount == playerWithMaxMines.mineCount) { // if two or more players share the highest mine count, game's a draw
+				winner = 0;
+			}
+		}
+		std::cout << "Not enough tiles remain to continue playing, the player with the greatest amount of mines remaining is the winner" << std::endl;
+		std::cout << "(Unless two or more players share the highest mine count, in which case it's a draw)" << std::endl;
+		return winner;
+	}
 	return cNoWinner; // else, the game is not over
 }

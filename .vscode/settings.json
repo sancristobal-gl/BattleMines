@@ -56,6 +56,7 @@
         "unordered_set": "cpp",
         "bitset": "cpp",
         "functional": "cpp",
-        "fstream": "cpp"
+        "fstream": "cpp",
+        "optional": "cpp"
     }
 }

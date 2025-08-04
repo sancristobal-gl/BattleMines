@@ -14,26 +14,19 @@ struct Position {
 
 struct PositionHash { // hashing implementation for Position
 	size_t operator()(const Position &pos) const {
-		// debugging;
-		// std::bitset<64> ea(((long long)pos.xpos << 32) ^ (long long)pos.ypos);
-		// std::cout << ea << std::endl;
-		return std::hash<long long>()(((long long)pos.xpos << 32) ^ (long long)pos.ypos); // xpos and ypos are 32bit unsigned integers, we concatenate them into a 64bit long long to create a key
+		return std::hash<long long>()((static_cast<long long>(pos.xpos) << 32) ^ static_cast<long long>(pos.ypos)); // xpos and ypos are 32bit unsigned integers, we concatenate them into a 64bit long long to create a key
 	}
 };
 
 struct Mine {
 	Position position;
-
 	int owner = -1;
-
 	bool operator==(const Mine &b) const;
-
 	bool operator==(const Position &b) const;
 };
 
 struct Player {
 	int id = -1;
-	Mine *mines = nullptr;
 	int mineCount = 0;
 	bool operator==(const Player b) {
 		return (id == b.id);
@@ -61,6 +54,8 @@ struct Board {
 bool isPositionValid(Board const &board, Position const &pos);
 
 std::vector<Position> getValidTiles(Board const &board);
+
+std::vector<Mine> getPlayerMines(Board const &board, Player const &player);
 
 void disablePosition(Board &board, Position const &disabledPosition);
 
