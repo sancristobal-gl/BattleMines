@@ -12,7 +12,6 @@ struct Position {
 	bool operator==(const Position &pos) const;
 };
 
-
 struct PositionHash { // hashing implementation for Position
 	size_t operator()(const Position &pos) const {
 		return std::hash<long long>()((static_cast<long long>(pos.xpos) << 32) ^ static_cast<long long>(pos.ypos)); // xpos and ypos are 32bit unsigned integers, we concatenate them into a 64bit long long to create a key

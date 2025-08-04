@@ -30,7 +30,7 @@ unsigned int getGuessAmount(unsigned int playerCount) { // players have guesses 
 int gameStages::guessing(Board &board) {
 	for (Player &p: board.players) {
 		printToPlayer(p, std::string("Player ") + std::to_string(p.id) + std::string("'s turn to guess:"));
-		printToPlayer(p, std::string("You've got ") + std::to_string(p.id) + std::string(" guesses"));
+		printToPlayer(p, std::string("You've got ") + std::to_string(getGuessAmount(board.playerCount)) + std::string(" guesses"));
 		for (int i = 0; i < getGuessAmount(board.playerCount); i++) {
 			guess(board, p);
 			waitForInput();
