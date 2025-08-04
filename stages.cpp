@@ -12,7 +12,6 @@ void gameStages::roundStart(Board const &board) {
 int gameStages::minePlacement(Board &board) {
 	for (Player &p: board.players) {
 		std::cout << "Player " << p.id << "'s turn to place their mines:" << std::endl;
-		board.gameType;
 		chooseMinePositions(board, p);
 	}
 	bool wasThereCollision = checkMineCollision(board); // check if mines collide, if they do, notify the player
