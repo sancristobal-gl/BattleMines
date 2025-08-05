@@ -5,7 +5,16 @@ const int undefinedPerspective = -1; // perspective represent the player who the
 
 const int charsPerLabel = 3;
 
-static bool awaitUserInput = true; //used to continously simulate a match when all players are bots
+void awaitUserInput(gameType gameType) {
+	std::cin.clear();
+	// std::cin.ignore(std::numeric_limits<std::streamsize>::max()); // causes "enter" to have to be pressed twice before proceeding
+	if (gameType != EVE) {
+		std::cout << "Press enter to continue" << std::endl;
+		std::cin.get();
+	}
+	system("cls");
+	return;
+}
 
 namespace boardConsoleDisplayHelper {
 	void showPositionStatus(Board const &board, unsigned int x, unsigned int y, int perspective = undefinedPerspective);
@@ -15,22 +24,30 @@ namespace boardConsoleDisplayHelper {
 	void printColumnInRow(Board const &board, unsigned int x, unsigned int y, int perspective);
 }
 
-void waitForInput() {
-	std::cin.clear();
-	// std::cin.ignore(std::numeric_limits<std::streamsize>::max()); // causes "enter" to have to be pressed twice before proceeding
-	std::cout << "Press enter to continue" << std::endl;
-	if(awaitUserInput){
-		std::cin.get();
+int getRandomValueInRange(int max, int min = 0) {
+	return (rand() % (max - min) + min);
+}
+
+Position getRandomValidPosition(Board const &board, Player player) { // helper function for bot players
+	// player parameter is currently unused, but it will be used in the future
+	std::vector<Position> validTiles = getValidTiles(board); // TODO: make bot not be able to choose the positions where their own mines are placed
+	return validTiles[getRandomValueInRange(validTiles.size())];
+}
+Position getPlayerInput(Board const &board, Player player) {
+	Position pos;
+	if (player.isAI == false) {
+		std::cout << "x: ";
+		std::cin >> pos.xpos;
+		std::cout << "y: ";
+		std::cin >> pos.ypos;
+	} else {
+		pos = getRandomValidPosition(board, player);
+		std::cout << std::endl;
 	}
-	system("cls");
-	return;
+	return pos;
 }
 
-void setAwaitUserInput(bool value){
-	awaitUserInput = value;
-}
-
-void printToPlayer(Player player, std::string message) { // shows message on console, unless the player is AI, to avoid spammig the console and potentially crashing the program
+void printToPlayer(Player const &player, std::string const &message) { // shows message on console, unless the player is AI, to avoid spammig the console and potentially crashing the program
 	if (!player.isAI) {
 		std::cout << message << std::endl;
 	}

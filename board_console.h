@@ -1,13 +1,11 @@
 #include "board.h"
-#include "functional"
+#include <functional>
 
-void waitForInput();
-
-void setAwaitUserInput(bool value);
+void awaitUserInput(gameType gameType);
 
 Board createBoard();
 
-void printToPlayer(Player player, std::string message);
+void printToPlayer(Player const &player, std::string const &message);
 
 int getValuesWithinRange(std::string const &prompt, int min, int max);
 
