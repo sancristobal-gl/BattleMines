@@ -39,45 +39,7 @@ Board createBoard(int gameTypeValue, int width, int height, int mineCount, int p
 	return board;
 }
 
-int getRandomValueInRange(int max, int min = 0) {
-	return (rand() % (max - min) + min);
-}
-
-Position getRandomValidPosition(Board const &board, Player const &player) { // helper function for bot players
-	std::vector<Position> validTiles = getValidTiles(board);
-	std::vector<Mine> playerMines = getPlayerMines(board, player);
-	for (auto it = validTiles.begin(); it != validTiles.end();) { // cursed for-loop, somewhat inefficient
-		bool erase = false;
-		for (Mine mine: playerMines) {
-			if (mine.position == *it) {
-				erase = true;
-				break;
-			}
-		}
-		if (erase) {
-			it = validTiles.erase(it);
-		} else {
-			it++;
-		}
-	}
-	return validTiles[getRandomValueInRange(validTiles.size())];
-}
-
-Position getPlayerInput(Board const &board, Player const &player) {
-	Position pos;
-	if (player.isAI == false) {
-		std::cout << "x: ";
-		std::cin >> pos.xpos;
-		std::cout << "y: ";
-		std::cin >> pos.ypos;
-	} else {
-		pos = getRandomValidPosition(board, player);
-		std::cout << std::endl;
-	}
-	return pos;
-}
-
-void chooseMinePositions(Board &board, Player &player) {
+void chooseMinePositions(Board &board, Player &player, RNGPointer RNG) {
 	printToPlayer(player, std::string("Player ") + std::to_string(player.id) + std::string("!, choose your mine's positions"));
 	for (int mineId = 0; mineId < player.mineCount; mineId++) {
 		if (!player.isAI) {
@@ -87,7 +49,7 @@ void chooseMinePositions(Board &board, Player &player) {
 		Mine mine;
 		while (validPlacement == false) {
 			printToPlayer(player, std::string("Choose the position of mine ") + std::to_string(mineId));
-			mine.position = getPlayerInput(board, player);
+			mine.position = getPlayerInput(board, player, RNG);
 			mine.owner = player.id;
 			validPlacement = isPositionValid(board, mine.position);
 			if (validPlacement == false) {
@@ -106,13 +68,13 @@ void chooseMinePositions(Board &board, Player &player) {
 	awaitUserInput(board.gameType);
 }
 
-void guess(Board &board, Player &player) {
+void guess(Board &board, Player &player, RNGPointer RNG) {
 	printBoard(board, player.id);
 	Position guess;
 	int isGuessValid = false; // flag to check if the inputed position is valid. If not, ask the player again
 	while (isGuessValid == false) {
 		printToPlayer(player, (std::string("Player ") + std::to_string(player.id) + std::string(", take a guess... ")));
-		guess = getPlayerInput(board, player);
+		guess = getPlayerInput(board, player, RNG);
 		isGuessValid = isPositionValid(board, guess);
 		if (isGuessValid == false) {
 			printToPlayer(player, "That spot has already been checked! Try again");
