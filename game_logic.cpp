@@ -20,9 +20,6 @@ Board createBoard() {
 		player.isAI = ((board.gameType == PVE) && (p > 0)) || (board.gameType == EVE);
 		board.players.push_back(player);
 	}
-	if (board.gameType == EVE) {
-		setAwaitUserInput(false);
-	}
 	return board;
 }
 
@@ -42,9 +39,6 @@ Board createBoard(int gameTypeValue, int width, int height, int mineCount, int p
 		player.id = p + 1;
 		player.isAI = ((board.gameType == PVE) && (p > 0)) || (board.gameType == EVE);
 		board.players.push_back(player);
-	}
-	if (board.gameType == EVE) {
-		setAwaitUserInput(false);
 	}
 	return board;
 }
@@ -109,7 +103,7 @@ void chooseMinePositions(Board &board, Player &player, RNGPointer RNG) {
 		// std::cout << "Player " << mine.owner+1 <<  " placed mine at " << mine.xpos << ", " << mine.ypos << std::endl; //for testing purposes, TODO: remove before main release
 		board.placedMines.push_back(mine);
 	}
-	waitForInput();
+	awaitUserInput(board.gameType);
 }
 
 void guess(Board &board, Player &player, RNGPointer RNG) {

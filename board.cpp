@@ -113,8 +113,6 @@ void eliminatePlayers(Board &board) {
 }
 // when only one player has mines remaining, they win the game
 // if no players have mines, game is a draw
-// TODO: refactor to support more than 2 players
-// Should make it so that players without mines are eliminated and the other players remain in the game
 int gameEndCondition(Board &board) {
 	static const int cNoWinner = -1;						// this value represents a state where the game is still going, as there's no winner yet
 	static const int cDraw = 0;								// this value represents a state where the game has ended with no player being a winner
