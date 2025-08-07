@@ -9,8 +9,8 @@ Board createBoard() {
 	int height = 0;
 	int mineCount = 0;
 	board.gameType = static_cast<gameType>(getValuesWithinRange("choose game mode (0=PVP, 1=PVE, 2=EVE)", 0, 2)); // not sure if this is good practice
-	board.width = getValuesWithinRange("choose the width of the field", 5, 10);
-	board.height = getValuesWithinRange("choose the height of the field", 5, 10);
+	board.width = getValuesWithinRange("choose the width of the field", 5, 20);
+	board.height = getValuesWithinRange("choose the height of the field", 5, 20);
 	mineCount = getValuesWithinRange("choose the number of mines on the field", 3, 8);
 	board.playerCount = getValuesWithinRange("choose the number of players", 2, 8);
 	for (int p = 0; p < board.playerCount; p++) {
@@ -24,6 +24,10 @@ Board createBoard() {
 		setAwaitUserInput(false);
 	}
 	return board;
+}
+
+int getRandomValueInRange(int max, int min) {
+	return (rand() % (max - min) + min);
 }
 
 Board createBoard(int gameTypeValue, int width, int height, int mineCount, int playerCount) { // overloaded instead of merging into one function because once requires player input and the other doesn't
@@ -45,11 +49,7 @@ Board createBoard(int gameTypeValue, int width, int height, int mineCount, int p
 	return board;
 }
 
-int getRandomValueInRange(int max, int min = 0) {
-	return (rand() % (max - min) + min);
-}
-
-Position getRandomValidPosition(Board const &board, Player const &player) { // helper function for bot players
+Position getRandomValidPosition(Board const &board, Player const &player, RNGPointer RNG) { // helper function for bot players
 	std::vector<Position> validTiles = getValidTiles(board);
 	std::vector<Mine> playerMines = getPlayerMines(board, player);
 	for (auto it = validTiles.begin(); it != validTiles.end();) { // cursed for-loop, somewhat inefficient
@@ -66,10 +66,10 @@ Position getRandomValidPosition(Board const &board, Player const &player) { // h
 			it++;
 		}
 	}
-	return validTiles[getRandomValueInRange(validTiles.size())];
+	return validTiles[RNG(validTiles.size(), 0)];
 }
 
-Position getPlayerInput(Board const &board, Player const &player) {
+Position getPlayerInput(Board const &board, Player const &player, RNGPointer RNG) {
 	Position pos;
 	if (player.isAI == false) {
 		std::cout << "x: ";
@@ -77,13 +77,13 @@ Position getPlayerInput(Board const &board, Player const &player) {
 		std::cout << "y: ";
 		std::cin >> pos.ypos;
 	} else {
-		pos = getRandomValidPosition(board, player);
+		pos = getRandomValidPosition(board, player, RNG);
 		std::cout << std::endl;
 	}
 	return pos;
 }
 
-void chooseMinePositions(Board &board, Player &player) {
+void chooseMinePositions(Board &board, Player &player, RNGPointer RNG) {
 	printToPlayer(player, std::string("Player ") + std::to_string(player.id) + std::string("!, choose your mine's positions"));
 	for (int mineId = 0; mineId < player.mineCount; mineId++) {
 		if (!player.isAI) {
@@ -93,7 +93,7 @@ void chooseMinePositions(Board &board, Player &player) {
 		Mine mine;
 		while (validPlacement == false) {
 			printToPlayer(player, std::string("Choose the position of mine ") + std::to_string(mineId));
-			mine.position = getPlayerInput(board, player);
+			mine.position = getPlayerInput(board, player, RNG);
 			mine.owner = player.id;
 			validPlacement = isPositionValid(board, mine.position);
 			if (validPlacement == false) {
@@ -112,13 +112,13 @@ void chooseMinePositions(Board &board, Player &player) {
 	waitForInput();
 }
 
-void guess(Board &board, Player &player) {
+void guess(Board &board, Player &player, RNGPointer RNG) {
 	printBoard(board, player.id);
 	Position guess;
 	int isGuessValid = false; // flag to check if the inputed position is valid. If not, ask the player again
 	while (isGuessValid == false) {
 		printToPlayer(player, (std::string("Player ") + std::to_string(player.id) + std::string(", take a guess... ")));
-		guess = getPlayerInput(board, player);
+		guess = getPlayerInput(board, player, RNG);
 		isGuessValid = isPositionValid(board, guess);
 		if (isGuessValid == false) {
 			printToPlayer(player, "That spot has already been checked! Try again");

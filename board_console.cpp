@@ -37,7 +37,7 @@ void printToPlayer(Player const &player, std::string const &message) { // shows 
 }
 void boardConsoleDisplayHelper::showPositionStatus(Board const &board, unsigned int x, unsigned int y, int perspective) {
 	// print the status of the position {x, y}
-	//(" " = doesn't exist, "O" = valid position with unknown contents, "M" = player mine in position)
+	//(" " = not valid, "O" = valid position with unknown contents, "M" = player mine in position)
 	bool isPositionEnabled = true;
 	Position pos = {x, y};
 	for (Position const &disabledPos: board.disabledPositions) {

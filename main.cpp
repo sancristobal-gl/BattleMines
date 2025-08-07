@@ -3,7 +3,6 @@
 #include <ctime>
 #include <fstream>
 #include <iostream>
-#include <optional>
 #include <string>
 #include <unordered_map>
 #include <utility>
@@ -14,7 +13,7 @@ unsigned int initRand(std::optional<unsigned int> customSeed = std::nullopt) { /
 	srand(seed);
 	return seed;
 }
-int gameLoop(Board &board) {
+int gameLoop(Board &board, RNGPointer RNG) {
 	/*
 	winner = 0, tie
 	winner = 1, player 1 won
@@ -25,9 +24,9 @@ int gameLoop(Board &board) {
 	while (winner == -1) { // could probably iterate over an array of function pointers?
 		gameStages::roundStart(board);
 		if (winner != -1) return winner; // not needed here but it looks more symmetrical
-		winner = gameStages::minePlacement(board);
+		winner = gameStages::minePlacement(board, RNG);
 		if (winner != -1) return winner;
-		winner = gameStages::guessing(board);
+		winner = gameStages::guessing(board, RNG);
 		if (winner != -1) return winner;
 		winner = gameStages::roundEnd(board);
 		if (winner != -1) return winner;
@@ -41,13 +40,15 @@ int main() {
 	log.close();
 #endif
 #ifdef QUICKSIM
-	Board board = createBoard(2, 10, 10, 3, 8);
+	Board board = createBoard(2, 20, 20, 3, 8);
 #else
 	Board board = createBoard();
 #endif
-	int winner = gameLoop(board);
+	
+	RNGPointer RNG = getRandomValueInRange; //pointer to random number generator function
+	int winner = gameLoop(board, RNG);
 	if (winner != 0) {
-		std::cout << "The winner is: player " << winner << "! Congratulations!" << std::endl;
+		std::cout << "The winner is: player " << winner << ", Congratulations!" << std::endl;
 	} else {
 		std::cout << "The game is a draw!" << std::endl;
 	}
