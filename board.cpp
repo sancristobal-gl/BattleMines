@@ -17,6 +17,30 @@ Board::~Board() {
 	// preserving just in case
 }
 
+int getRandomValueInRange(int max, int min) {
+	return (rand() % (max - min) + min);
+}
+
+Position getRandomValidPosition(Board const &board, Player const &player, RNGPointer RNG) { // helper function for bot players
+	std::vector<Position> validTiles = getValidTiles(board);
+	std::vector<Mine> playerMines = getPlayerMines(board, player);
+	for (auto it = validTiles.begin(); it != validTiles.end();) { // cursed for-loop, somewhat inefficient
+		bool erase = false;
+		for (Mine mine: playerMines) {
+			if (mine.position == *it) {
+				erase = true;
+				break;
+			}
+		}
+		if (erase) {
+			it = validTiles.erase(it);
+		} else {
+			it++;
+		}
+	}
+	return validTiles[RNG(validTiles.size(), 0)];
+}
+
 bool isPositionValid(Board const &board, Position const &pos) { // check if pos if withing acceptable values
 	// If the position is outside the board, return false;
 	if ((pos.xpos < 1) || (pos.ypos < 1) || (pos.xpos > board.width) || (pos.ypos > board.height)) {

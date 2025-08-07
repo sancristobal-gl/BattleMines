@@ -23,10 +23,6 @@ Board createBoard() {
 	return board;
 }
 
-int getRandomValueInRange(int max, int min) {
-	return (rand() % (max - min) + min);
-}
-
 Board createBoard(int gameTypeValue, int width, int height, int mineCount, int playerCount) { // overloaded instead of merging into one function because once requires player input and the other doesn't
 	Board board;
 	board.gameType = static_cast<gameType>(gameTypeValue);
@@ -41,40 +37,6 @@ Board createBoard(int gameTypeValue, int width, int height, int mineCount, int p
 		board.players.push_back(player);
 	}
 	return board;
-}
-
-Position getRandomValidPosition(Board const &board, Player const &player, RNGPointer RNG) { // helper function for bot players
-	std::vector<Position> validTiles = getValidTiles(board);
-	std::vector<Mine> playerMines = getPlayerMines(board, player);
-	for (auto it = validTiles.begin(); it != validTiles.end();) { // cursed for-loop, somewhat inefficient
-		bool erase = false;
-		for (Mine mine: playerMines) {
-			if (mine.position == *it) {
-				erase = true;
-				break;
-			}
-		}
-		if (erase) {
-			it = validTiles.erase(it);
-		} else {
-			it++;
-		}
-	}
-	return validTiles[RNG(validTiles.size(), 0)];
-}
-
-Position getPlayerInput(Board const &board, Player const &player, RNGPointer RNG) {
-	Position pos;
-	if (player.isAI == false) {
-		std::cout << "x: ";
-		std::cin >> pos.xpos;
-		std::cout << "y: ";
-		std::cin >> pos.ypos;
-	} else {
-		pos = getRandomValidPosition(board, player, RNG);
-		std::cout << std::endl;
-	}
-	return pos;
 }
 
 void chooseMinePositions(Board &board, Player &player, RNGPointer RNG) {

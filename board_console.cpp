@@ -24,16 +24,7 @@ namespace boardConsoleDisplayHelper {
 	void printColumnInRow(Board const &board, unsigned int x, unsigned int y, int perspective);
 }
 
-int getRandomValueInRange(int max, int min = 0) {
-	return (rand() % (max - min) + min);
-}
-
-Position getRandomValidPosition(Board const &board, Player player) { // helper function for bot players
-	// player parameter is currently unused, but it will be used in the future
-	std::vector<Position> validTiles = getValidTiles(board); // TODO: make bot not be able to choose the positions where their own mines are placed
-	return validTiles[getRandomValueInRange(validTiles.size())];
-}
-Position getPlayerInput(Board const &board, Player player) {
+Position getPlayerInput(Board const &board, Player player, RNGPointer RNG) {
 	Position pos;
 	if (player.isAI == false) {
 		std::cout << "x: ";
@@ -41,7 +32,7 @@ Position getPlayerInput(Board const &board, Player player) {
 		std::cout << "y: ";
 		std::cin >> pos.ypos;
 	} else {
-		pos = getRandomValidPosition(board, player);
+		pos = getRandomValidPosition(board, player, RNG);
 		std::cout << std::endl;
 	}
 	return pos;
