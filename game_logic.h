@@ -6,15 +6,14 @@
 #include <unordered_map>
 #include <utility>
 #include <vector>
+#include <optional>
 
 Board createBoard();
 
 Board createBoard(int gameType, int width, int height, int mineCount, int playerCount);
 
-Position getPlayerInput(Board const &board, Player const &player);
+void chooseMinePositions(Board &board, Player &player, RNGPointer RNG);
 
-void chooseMinePositions(Board &board, Player &player);
-
-void guess(Board &board, Player &player);
+void guess(Board &board, Player &player, RNGPointer RNG);
 
 bool checkMineCollision(Board &board);

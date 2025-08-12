@@ -51,6 +51,12 @@ struct Board {
 	~Board();
 };
 
+typedef int (*RNGPointer)(int, int);
+
+int getRandomValueInRange(int max, int min);
+
+Position getRandomValidPosition(Board const &board, Player const &player, RNGPointer RNG);
+
 bool isPositionValid(Board const &board, Position const &pos);
 
 std::vector<Position> getValidTiles(Board const &board);
